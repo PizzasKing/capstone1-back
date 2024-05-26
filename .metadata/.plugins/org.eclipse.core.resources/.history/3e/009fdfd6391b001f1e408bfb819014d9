@@ -1,0 +1,43 @@
+package com.manbo.homepage.entity;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Data
+@Builder
+@Table(name = "trail")
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+public class Trail extends BaseEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long trailId; // 산책로 ID
+
+    // 작성자 - 외래키
+    @JsonIgnore
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name="mid")
+	private Member member;
+
+    @Column(nullable = false)
+    private String startLocation; // 시작 위치
+
+    @Column(nullable = false)
+    private String trailName; // 산책로 이름
+
+    @Column(nullable = false)
+    private int usageCount; // 산책로 이용 횟수
+
+    @Column(nullable = false)
+    private double rating; // 산책로 평점
+
+    @Column(nullable = false)
+    private LocalDateTime registrationDate; // 산책로 등록일
+}
