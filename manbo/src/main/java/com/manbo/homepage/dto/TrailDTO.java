@@ -25,7 +25,7 @@ public class TrailDTO {
     private double rating; // 산책로 평점
     private Timestamp createdDate; 
     
-    public static TrailDTO tosaveDTO(Trail trail) {
+    public static TrailDTO toSaveDTO(Trail trail) {
     	TrailDTO trailDTO = TrailDTO.builder()
                 .trailId(trail.getTrailId())
                 .member(trail.getMember())
