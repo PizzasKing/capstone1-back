@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 import com.manbo.homepage.entity.Member;
 import com.manbo.homepage.entity.Trail;
@@ -23,10 +22,11 @@ public class TrailDTO {
     private String trailName; // 산책로 이름
     private int usageCount; // 산책로 이용 횟수
     private double rating; // 산책로 평점
-    private Timestamp createdDate; 
+    private Timestamp createdDate;
+    private String trailRoutePath; // 산책로 경로 파일 경로
     
     public static TrailDTO toSaveDTO(Trail trail) {
-    	TrailDTO trailDTO = TrailDTO.builder()
+        TrailDTO trailDTO = TrailDTO.builder()
                 .trailId(trail.getTrailId())
                 .member(trail.getMember())
                 .startLocation(trail.getStartLocation())
@@ -34,8 +34,9 @@ public class TrailDTO {
                 .usageCount(trail.getUsageCount())
                 .rating(trail.getRating())
                 .createdDate(trail.getCreatedDate())
+                .trailRoutePath(trail.getTrailRoutePath())
                 .build();
-    	
-    	return trailDTO;
+        
+        return trailDTO;
     }
 }

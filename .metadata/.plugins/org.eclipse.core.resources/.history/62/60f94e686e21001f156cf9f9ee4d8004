@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+<meta charset="UTF-8">
+<title>만보</title>
+<link rel="stylesheet" th:href="@{/css/style.css}">
+<script src="https://code.jquery.com/jquery-3.7.1.js"
+	integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+	crossorigin="anonymous"></script>
+</head>
+<body>
+	<header th:fragment="header-fragment">
+		<div id="header">
+			<section class="header">
+				<div class="header_logo_box">
+					<a th:href="@{/}"><img class="header_logo"
+						th:src="@{/images/main_logo.png}" alt="logo"></a>
+				</div>
+				<div class="header_links">
+					<div class="header_link">
+						<div class="header_link_search">
+							<a th:href="@{/trail/list}">산책로 검색</a>
+						</div>
+						<div class="header_link_open_space">
+							<a th:href="@{/freeboard/pagelist}">자유게시판</a>
+							<div class="header_sub_link_open_space">
+								<p>
+									<a th:href="@{/freeboard/pagelist}">자유게시판</a>
+								</p>
+							</div>
+						</div>
+						<div class="">
+							<a th:href="@{/notice/pagelist}">만보안내</a>
+							<div class="">
+								<p>
+									<a th:href="@{/notice/pagelist}">공지사항</a>
+								</p>
+								<p>
+									<a th:href="@{/notice/guide}">이용안내</a>
+								</p>
+								<p>
+									<a th:href="@{/notice/directions}">오시는길</a>
+								</p>
+							</div>
+						</div>
+					</div>
+					<div class="header_menu_toggle_box">
+						<button class="header_menu_toggle_btn">
+							<span>●</span><span>●</span><span>●</span>
+						</button>
+					</div>
+				</div>
+				<div class="header_member">
+					<th:block sec:authorize="isAnonymous()">
+						<a class="header_member_join" th:href="@{/login}">로그인</a> |
+        <a class="header_member_login" th:href="@{/member/join}">회원가입</a>
+					</th:block>
+					<th:block sec:authorize="isAuthenticated()">
+						<div class="admin_box">
+							<a class="header_member_admin" th:href="@{/member/detail}"
+								sec:authorize="hasAnyAuthority('Admin')">ⓘ</a>
+							<div class="admin_menu">
+								<a th:href="@{/member/list}"
+									sec:authorize="hasAnyAuthority('Admin')">회원목록</a> <a
+									th:href="@{/trail/register}"
+									sec:authorize="hasAnyAuthority('Admin')">도서등록</a>
+							</div>
+						</div>
+						<a class="header_member_join" th:href="#"
+							th:text="${member.name} + '님'"></a> |
+        <a class="header_member_login" th:href="@{/logout}">로그아웃</a>
+					</th:block>
+				</div>
+			</section>
+		</div>
+		<script>
+            const navbarToggle = document.querySelector('.header_menu_toggle_btn');
+            const navbarMenu = document.querySelector('.header_link');
+
+            navbarToggle.addEventListener('click', () => {
+                navbarMenu.classList.toggle('header_menu_active');
+            });
+        </script>
+	</header>
+</body>
+</html>

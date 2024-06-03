@@ -7,7 +7,6 @@ import com.manbo.homepage.dto.TrailDTO;
 import jakarta.persistence.*;
 import lombok.*;
 
-
 @Entity
 @Data
 @Builder
@@ -23,9 +22,9 @@ public class Trail extends BaseEntity {
 
     // 작성자 - 외래키
     @JsonIgnore
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name="mid")
-	private Member member;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "mid")
+    private Member member;
 
     @Column(nullable = false)
     private String startLocation; // 시작 위치
@@ -38,30 +37,34 @@ public class Trail extends BaseEntity {
 
     @Column(nullable = false)
     private double rating; // 산책로 평점
-    
+
+    @Column(nullable = true)
+    private String trailRoutePath; // 산책로 경로 파일 경로
+
     // insert
- 	public static Trail toSaveEntity(TrailDTO trailDTO) {
- 		Trail trail = Trail.builder()
- 				.startLocation(trailDTO.getStartLocation())
- 				.trailName(trailDTO.getTrailName())
- 				.usageCount(trailDTO.getUsageCount())
- 				.rating(trailDTO.getRating())
- 				.member(trailDTO.getMember())
- 				.build();
- 		return trail;
- 	}
+    public static Trail toSaveEntity(TrailDTO trailDTO) {
+        Trail trail = Trail.builder()
+                .startLocation(trailDTO.getStartLocation())
+                .trailName(trailDTO.getTrailName())
+                .usageCount(trailDTO.getUsageCount())
+                .rating(trailDTO.getRating())
+                .member(trailDTO.getMember())
+                .trailRoutePath(trailDTO.getTrailRoutePath())
+                .build();
+        return trail;
+    }
 
- 	// update
- 	public static Trail toUpdateEntity(TrailDTO trailDTO) {
- 		Trail trail = Trail.builder()
- 				.trailId(trailDTO.getTrailId())
- 				.startLocation(trailDTO.getStartLocation())
- 				.trailName(trailDTO.getTrailName())
- 				.usageCount(trailDTO.getUsageCount())
- 				.rating(trailDTO.getRating())
- 				.member(trailDTO.getMember())
- 				.build();
- 		return trail;
- 	}
-
+    // update
+    public static Trail toUpdateEntity(TrailDTO trailDTO) {
+        Trail trail = Trail.builder()
+                .trailId(trailDTO.getTrailId())
+                .startLocation(trailDTO.getStartLocation())
+                .trailName(trailDTO.getTrailName())
+                .usageCount(trailDTO.getUsageCount())
+                .rating(trailDTO.getRating())
+                .member(trailDTO.getMember())
+                .trailRoutePath(trailDTO.getTrailRoutePath())
+                .build();
+        return trail;
+    }
 }

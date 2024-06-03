@@ -1,11 +1,9 @@
 package com.manbo.homepage.controller;
 
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,24 +25,26 @@ public class TrailController {
     private final TrailService trailService;
     private final MemberService memberService;
 
-    //산책로 등록 폼
+    // 산책로 등록 폼
     @GetMapping("/register")
-    public String insertFrom(@AuthenticationPrincipal SecurityUser principal, Model model){
-        if(principal == null){
-        	return "trail/register";
-        }else{
+    public String insertForm(@AuthenticationPrincipal SecurityUser principal, Model model) {
+        if (principal == null) {
+            return "trail/register";
+        } else {
             MemberDTO memberDTO = memberService.findByMid(principal);
             model.addAttribute("member", memberDTO);
             return "trail/register";
         }
     }
-    //산책로 등록 처리
+
+    // 산책로 등록 처리
     @PostMapping("/register")
-    public String insert(@ModelAttribute TrailDTO trailDTO, MultipartFile trailRoute) throws Exception{
+    public String insert(@ModelAttribute TrailDTO trailDTO, MultipartFile trailRoute) throws Exception {
         trailService.save(trailDTO, trailRoute);
         return "redirect:/trail/list";
     }
-    //산책로 리스트
+
+    // 산책로 리스트
     @GetMapping("/list")
     public String getList(@RequestParam(value = "page", defaultValue = "0") int page,
                           @RequestParam(value = "size", defaultValue = "10") int size,
@@ -55,14 +55,11 @@ public class TrailController {
         Pageable pageable = PageRequest.of(page, size);
         Page<TrailDTO> trailPage;
 
-
         if (keyword != null) {
             trailPage = trailService.search(keyword, pageable);
         } else {
             trailPage = trailService.paging(pageable);
         }
-
-
 
         List<TrailDTO> trailDTOList = trailService.findAll();
 
@@ -78,49 +75,47 @@ public class TrailController {
             return "trail/list";
         }
     }
-    //산책로 상세
+
+    // 산책로 상세
     @GetMapping("/detail/{trailId}")
-    public String detail(@PathVariable Long trailId, Model model, @AuthenticationPrincipal SecurityUser principal){
+    public String detail(@PathVariable Long trailId, Model model, @AuthenticationPrincipal SecurityUser principal) {
         TrailDTO trailDTO = trailService.findById(trailId);
         model.addAttribute("trail", trailDTO);
-        if(principal == null){
+        if (principal == null) {
             return "trail/detail";
-        }else{
+        } else {
             MemberDTO memberDTO = memberService.findByMid(principal);
             model.addAttribute("member", memberDTO);
             return "trail/detail";
         }
     }
-    //산책로 수정
+
+    // 산책로 수정 폼
     @GetMapping("/update/{trailId}")
-    public String updateForm(@PathVariable Long trailId, Model model,
-    						@AuthenticationPrincipal SecurityUser principal){
+    public String updateForm(@PathVariable Long trailId, Model model, @AuthenticationPrincipal SecurityUser principal) {
         TrailDTO trailDTO = trailService.findById(trailId);
         model.addAttribute("trail", trailDTO);
-        
-        if(principal == null){
-        	return "trail/update";
-        }else{
+
+        if (principal == null) {
+            return "trail/update";
+        } else {
             MemberDTO memberDTO = memberService.findByMid(principal);
             model.addAttribute("member", memberDTO);
             return "trail/update";
         }
-        
     }
-    
-    //산책로 수정 처리
+
+    // 산책로 수정 처리
     @PostMapping("/update")
-    public String update(@ModelAttribute TrailDTO trailDTO,MultipartFile trailRoute) throws Exception {
+    public String update(@ModelAttribute TrailDTO trailDTO, MultipartFile trailRoute) throws Exception {
         trailService.update(trailDTO, trailRoute);
         return "redirect:/trail/list";
     }
-    
-    //산책로 삭제
+
+    // 산책로 삭제
     @GetMapping("/delete/{trailId}")
-    public String delete(@PathVariable Long trailId){
+    public String delete(@PathVariable Long trailId) {
         trailService.deleteById(trailId);
         return "redirect:/trail/list";
     }
-
-
 }

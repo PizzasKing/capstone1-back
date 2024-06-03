@@ -14,8 +14,6 @@
     <fullyQualifiedTypeName name="java.time.LocalDateTime"/>
     <fullyQualifiedTypeName name="java.sql.Timestamp"/>
     <fullyQualifiedTypeName name="com.manbo.homepage.service.FreeBoardService"/>
-    <fullyQualifiedTypeName name="org.springframework.stereotype.Repository"/>
-    <fullyQualifiedTypeName name="org.springframework.data.jpa.repository.JpaRepository"/>
     <fullyQualifiedTypeName name="com.manbo.homepage.repository.MemberRepository"/>
     <fullyQualifiedTypeName name="org.springframework.security.crypto.password.PasswordEncoder"/>
     <fullyQualifiedTypeName name="com.manbo.homepage.entity.Role"/>
@@ -26,8 +24,6 @@
     <fullyQualifiedTypeName name="java.util.ArrayList"/>
     <fullyQualifiedTypeName name="org.springframework.stereotype.Service"/>
     <fullyQualifiedTypeName name="lombok.RequiredArgsConstructor"/>
-    <fullyQualifiedTypeName name="org.springframework.data.domain.Page"/>
-    <fullyQualifiedTypeName name="org.springframework.data.domain.Pageable"/>
     <fullyQualifiedTypeName name="com.manbo.homepage.dto.FreeBoardDTO"/>
     <fullyQualifiedTypeName name="com.manbo.homepage.service.NoticeBoardService"/>
     <fullyQualifiedTypeName name="com.manbo.homepage.repository.NoticeBoardRepository"/>
@@ -41,9 +37,16 @@
     <fullyQualifiedTypeName name="com.manbo.homepage.service.MemberService"/>
     <fullyQualifiedTypeName name="com.manbo.homepage.config.SecurityUser"/>
     <fullyQualifiedTypeName name="com.manbo.homepage.dto.MemberDTO"/>
-    <fullyQualifiedTypeName name="com.manbo.homepage.entity.Trail"/>
     <fullyQualifiedTypeName name="com.manbo.homepage.repository.TrailRepository"/>
     <fullyQualifiedTypeName name="com.manbo.homepage.exception.FinalException"/>
     <fullyQualifiedTypeName name="com.manbo.homepage.dto.TrailDTO"/>
     <fullyQualifiedTypeName name="com.manbo.homepage.service.TrailService"/>
+    <fullyQualifiedTypeName name="com.manbo.homepage.entity.Trail"/>
+    <fullyQualifiedTypeName name="org.springframework.stereotype.Repository"/>
+    <fullyQualifiedTypeName name="org.springframework.data.jpa.repository.Query"/>
+    <fullyQualifiedTypeName name="org.springframework.data.domain.Page"/>
+    <fullyQualifiedTypeName name="org.springframework.data.domain.Pageable"/>
+    <fullyQualifiedTypeName name="org.springframework.data.jpa.repository.JpaRepository"/>
+    <fullyQualifiedTypeName name="org.springframework.data.repository.query.Param"/>
+    <fullyQualifiedTypeName name="org.springframework.beans.factory.annotation.Value"/>
 </qualifiedTypeNameHistroy>

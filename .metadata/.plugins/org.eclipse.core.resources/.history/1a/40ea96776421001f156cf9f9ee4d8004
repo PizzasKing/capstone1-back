@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>만포 첫 페이지</title>
+<link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+	<div th:replace="~{header::header-fragment}"></div>
+	<div id="container">
+		<section class="main">
+
+			<div class="main_top">
+				<div class="main_pic_box">
+					<img class="main_pic active" th:src="@{/images/main-pic1.jpg}"
+						alt=""> <img class="main_pic"
+						th:src="@{/images/main-pic3.jpg}" alt=""> <img
+						class="main_pic" th:src="@{/images/main-pic5.jpg}" alt="">
+				</div>
+
+				<div class="main_welcome">
+					<p class="main_big_welcome">
+						반갑습니다. <br>만보입니다.
+					</p>
+					<p class="main_small_welcom">안녕하세요</p>
+				</div>
+			</div>
+		</section>
+	</div>
+</body>
+</html>
