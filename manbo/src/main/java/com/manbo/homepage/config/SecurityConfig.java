@@ -26,8 +26,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
             .authorizeRequests(authorize -> authorize
-                .requestMatchers("/api/v1/members/join", "/api/v1/members/login").permitAll()
-                .anyRequest().authenticated())
+                .anyRequest().permitAll())
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         return http.build();
