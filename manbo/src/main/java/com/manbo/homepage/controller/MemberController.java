@@ -16,6 +16,7 @@ import com.manbo.homepage.dto.MemberDTO;
 import com.manbo.homepage.service.MemberService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController // 컨트롤러를 REST API로 사용하려면 @RestController로 선언합니다.
@@ -26,17 +27,27 @@ public class MemberController {
     private final AuthenticationManager authenticationManager;
 
     // 회원 가입
+
     @PostMapping("/join")
-    public ResponseEntity<String> join(@Valid @RequestBody MemberDTO memberDTO, BindingResult bindingResult) {
+    public ResponseEntity<?> join(@Valid @RequestBody MemberDTO memberDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().body("Validation error"); // 유효성 검사 실패 시 400 에러 반환
+            String errors = bindingResult.getFieldErrors().stream()
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .collect(Collectors.joining(", "));
+            return ResponseEntity.badRequest().body("Validation error: " + errors);
         }
-        memberService.save(memberDTO);
-        return ResponseEntity.ok("Join successful"); // 성공 시 200 반환
+        try {
+            memberService.save(memberDTO);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        }
+        return ResponseEntity.ok("Join successful");
     }
 
     // 회원 목록 조회
-    @GetMapping
+    @GetMapping("/list")
     public ResponseEntity<List<MemberDTO>> getAllMembers() {
         List<MemberDTO> memberDTOList = memberService.findAll();
         return ResponseEntity.ok(memberDTOList);
@@ -51,7 +62,8 @@ public class MemberController {
         }
         return ResponseEntity.ok(memberDTO);
     }   
-    //로그인
+
+    // 로그인
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody MemberDTO memberDTO) {
         try {
@@ -76,7 +88,11 @@ public class MemberController {
     @PutMapping("/{memberId}")
     public ResponseEntity<String> updateMember(@PathVariable Long memberId, @Valid @RequestBody MemberDTO memberDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().body("Validation error");
+            // 유효성 검사 실패 시, 구체적인 오류 메시지를 반환하도록 수정
+            String errors = bindingResult.getFieldErrors().stream()
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .collect(Collectors.joining(", "));
+            return ResponseEntity.badRequest().body("Validation error: " + errors);
         }
         MemberDTO existingMember = memberService.findById(memberId);
         if (existingMember == null) {

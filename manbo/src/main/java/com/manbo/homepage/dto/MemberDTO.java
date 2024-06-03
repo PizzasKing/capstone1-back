@@ -29,7 +29,7 @@ public class MemberDTO {
     private String email;
 
     @NotEmpty(message = "이름은 필수 항목입니다.")
-    @Pattern(regexp = "^[가-힣]*$", message = "이름은 한글만 입력해 주세요.")
+    @Pattern(regexp = "^(?=.*[a-z0-9가-힣])[a-z0-9가-힣]{2,16}$", message = "사용할 수 없는 닉네임 입니다.")
     private String name;
 
     private Role role;
