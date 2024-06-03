@@ -5,6 +5,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import com.manbo.homepage.dto.MemberDTO;
@@ -18,6 +23,7 @@ import java.util.List;
 @RequestMapping("/api/v1/members") // URL을 리소스 중심으로 변경합니다.
 public class MemberController {
     private final MemberService memberService;
+    private final AuthenticationManager authenticationManager;
 
     // 회원 가입
     @PostMapping("/join")
@@ -44,6 +50,19 @@ public class MemberController {
             return ResponseEntity.notFound().build(); // 해당 회원이 없을 경우 404 에러 반환
         }
         return ResponseEntity.ok(memberDTO);
+    }   
+    //로그인
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody MemberDTO memberDTO) {
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(memberDTO.getMid(), memberDTO.getPassword())
+            );
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            return ResponseEntity.ok("Login successful");
+        } catch (AuthenticationException e) {
+            return ResponseEntity.status(401).body("Invalid username or password");
+        }
     }
 
     // 회원 삭제
@@ -67,6 +86,4 @@ public class MemberController {
         memberService.update(memberDTO);
         return ResponseEntity.ok("Member updated successfully");
     }
-
-    // 기타 필요한 API들을 추가로 정의하세요.
 }
