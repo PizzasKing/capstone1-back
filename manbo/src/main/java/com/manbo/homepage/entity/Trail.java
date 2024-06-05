@@ -33,7 +33,7 @@ public class Trail extends BaseEntity {
     private String trailName; // 산책로 이름
 
     @Column(nullable = false)
-    private int usageCount; // 산책로 이용 횟수
+    private Integer usageCount; // 산책로 이용 횟수
 
     @Column(nullable = false)
     private double rating; // 산책로 평점

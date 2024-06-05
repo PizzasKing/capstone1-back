@@ -1,0 +1,67 @@
+package com.manbo.homepage.entity;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.manbo.homepage.dto.ReviewDTO;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Entity
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Review extends BaseEntity{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long reviewId;
+
+    @Column(name = "review_rank", nullable = false)
+    private Integer reviewRank;
+
+    @Column(name = "review_content", nullable = false)
+    private String reviewContent;
+    
+    @JsonIgnore
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name="trailId")
+	private Trail trail;
+
+    @JsonIgnore
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name="mid")
+	private Member member;
+    
+    //insert
+    public static Review toSaveEntity(ReviewDTO reviewDTO) {
+    	Review review = Review.builder()
+    			.reviewRank(reviewDTO.getReviewRank())
+    			.reviewContent(reviewDTO.getReviewContent())
+    			.trail(reviewDTO.getTrail())
+    			.member(reviewDTO.getMember())
+    			.build();
+    	return review;
+    }
+    //update
+    public static Review toUpdateEntity(ReviewDTO reviewDTO) {
+    	Review review = Review.builder()
+    			.reviewId(reviewDTO.getReviewId())
+    			.reviewRank(reviewDTO.getReviewRank())
+    			.reviewContent(reviewDTO.getReviewContent())
+    			.trail(reviewDTO.getTrail())
+    			.member(reviewDTO.getMember())
+    			.build();
+    	return review;
+    }
+}
+

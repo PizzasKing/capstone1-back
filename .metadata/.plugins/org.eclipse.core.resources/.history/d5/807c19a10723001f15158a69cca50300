@@ -1,0 +1,31 @@
+package com.manbo.homepage.dto;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+@Entity
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class RouteDTO {
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "route_id")
+	private String routeId;
+
+	@Column(name = "time_idx")
+	private String timeIDX;
+
+	@Column(name = "lat")
+	private Integer lat;
+
+	@Column(name = "long")
+	private Integer lng;
+
+	@Column(name = "al")
+	private Integer al;
+
+
+}

@@ -1,0 +1,48 @@
+package com.manbo.homepage.entity;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.manbo.homepage.dto.TrailReviewDTO;
+
+import jakarta.persistence.*;
+
+@Entity
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class Review extends BaseEntity{
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long reviewId;
+
+    @Column(name = "review_rank", nullable = false)
+    private Integer reviewRank;
+
+    @Column(name = "review_content", nullable = false)
+    private String reviewContent;
+    
+    @JsonIgnore
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name="trailId")
+	private Trail trail;
+
+    @JsonIgnore
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name="mid")
+	private Member member;
+    
+    public static TrailReview toSaveEntity(TrailReviewDTO trailReviewDTO) {
+    	TrailReview trailReview = TrailReview.builder()
+    			.reviewRank(trailReviewDTO.getReviewRank())
+    			.reviewDate(trailReviewDTO.getReviewDate())
+    			
+    }
+}
+

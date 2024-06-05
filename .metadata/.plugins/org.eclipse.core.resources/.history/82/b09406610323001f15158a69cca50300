@@ -1,0 +1,37 @@
+package com.manbo.homepage.entity;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.*;
+
+@Entity
+@Getter
+@Setter
+public class TrailReview {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long reviewid;
+
+    @Column(name = "review_rank", nullable = false)
+    private Integer reviewRank;
+
+    @Column(name = "review_date", nullable = false)
+    private String reviewDate;
+
+    @Column(name = "review_content", nullable = false)
+    private String reviewContent;
+    
+    @JsonIgnore
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name="trailId")
+	private Trail trail;
+
+    @JsonIgnore
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name="mid")
+	private Member member;
+}
+
