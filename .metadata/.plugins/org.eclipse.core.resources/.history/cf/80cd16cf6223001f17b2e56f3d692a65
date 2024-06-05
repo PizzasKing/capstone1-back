@@ -1,0 +1,39 @@
+package com.manbo.homepage.dto;
+
+import com.manbo.homepage.entity.MemberPreference;
+
+import lombok.*;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class MemberPreferenceDTO {
+
+    private Long preferenceId;
+    private MemberDTO member;
+    private TrailDTO trailId;
+
+    public static MemberPreferenceDTO toDTO(MemberPreference memberPreference) {
+        return MemberPreferenceDTO.builder()
+                .preferenceId(memberPreference.getPreferenceId())
+                .member(MemberDTO.toDTO(memberPreference.getMember()))
+                .trailId(TrailDTO.toDTO(memberPreference.getTrailId()))
+                .build();
+    }
+
+    public static MemberPreferenceDTO toSaveDTO(MemberPreference memberPreference) {
+        return MemberPreferenceDTO.builder()
+                .member(MemberDTO.toDTO(memberPreference.getMember()))
+                .trailId(TrailDTO.toDTO(memberPreference.getTrailId()))
+                .build();
+    }
+
+    public static MemberPreferenceDTO toUpdateDTO(MemberPreference memberPreference) {
+        return MemberPreferenceDTO.builder()
+                .preferenceId(memberPreference.getPreferenceId())
+                .member(MemberDTO.toDTO(memberPreference.getMember()))
+                .trailId(TrailDTO.toDTO(memberPreference.getTrailId()))
+                .build();
+    }
+}

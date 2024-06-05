@@ -1,0 +1,27 @@
+package com.manbo.homepage.entity;
+
+import lombok.*;
+
+import jakarta.persistence.*;
+
+@Entity
+@Data
+@Builder
+@Table(name = "member_preference")
+@NoArgsConstructor
+@AllArgsConstructor
+public class MemberPreference extends BaseEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "preference_id")
+    private Long preferenceId;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "trail_id", nullable = false)
+    private Trail trail;
+}

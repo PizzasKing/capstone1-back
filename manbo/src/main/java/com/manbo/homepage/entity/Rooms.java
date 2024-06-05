@@ -1,5 +1,69 @@
 package com.manbo.homepage.entity;
 
-public class Rooms {
+import com.manbo.homepage.dto.RoomsDTO;
 
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Data
+@Builder
+@Table(name = "rooms")
+@NoArgsConstructor
+@AllArgsConstructor
+public class Rooms extends BaseEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long roomId;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "mid")
+    private Member member;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "trail_id")
+    private Trail trailId;
+
+    @Column(nullable = false)
+    private String title;
+
+    @Column(nullable = false)
+    private String description;
+
+    @Column(name = "max_members", nullable = false)
+    private int maxMembers;
+
+    @Column(name = "meeting_time", nullable = false)
+    private LocalDateTime meetingTime;
+
+    @Column(nullable = false)
+    private String status;
+
+    public static Rooms toSaveEntity(RoomsDTO roomsDTO) {
+        return Rooms.builder()
+        		.member(roomsDTO.getMember())
+        		.trailId(roomsDTO.getTrailId())
+                .title(roomsDTO.getTitle())
+                .description(roomsDTO.getDescription())
+                .maxMembers(roomsDTO.getMaxMembers())
+                .meetingTime(roomsDTO.getMeetingTime())
+                .status(roomsDTO.getStatus())
+                .build();
+    }
+
+    public static Rooms toUpdateEntity(RoomsDTO roomsDTO) {
+        return Rooms.builder()
+                .roomId(roomsDTO.getRoomId())
+                .member(roomsDTO.getMember())
+        		.trailId(roomsDTO.getTrailId())
+                .title(roomsDTO.getTitle())
+                .description(roomsDTO.getDescription())
+                .maxMembers(roomsDTO.getMaxMembers())
+                .meetingTime(roomsDTO.getMeetingTime())
+                .status(roomsDTO.getStatus())
+                .build();
+    }
 }

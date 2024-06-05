@@ -1,5 +1,6 @@
 package com.manbo.homepage.dto;
 
+import com.manbo.homepage.entity.Route;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,11 +12,21 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RouteDTO {
 
-    private String routeId;
-    private String timeIDX;
+    private Long routeId;
+    private Long timeIDX;
     private double lat;
     private double lng;
     private double al;
-    private String memberId; // Assuming you want to include memberId in the DTO
+    private Long trailId; // Trail 엔티티의 ID를 저장할 필드
 
+    public static RouteDTO toSaveDTO(Route route) {
+        return RouteDTO.builder()
+                .routeId(route.getRouteId())
+                .timeIDX(route.getTimeIDX())
+                .lat(route.getLat())
+                .lng(route.getLng())
+                .al(route.getAl())
+                .trailId(route.getTrail().getTrailId()) // Trail 객체에서 ID를 가져옴
+                .build();
+    }
 }

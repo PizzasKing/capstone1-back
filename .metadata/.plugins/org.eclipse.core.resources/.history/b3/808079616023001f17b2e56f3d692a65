@@ -1,0 +1,47 @@
+package com.manbo.homepage.entity;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Entity
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "rooms")
+public class Rooms extends BaseEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "room_id")
+    private Long roomId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "trail_id", nullable = false)
+    private Trail trail;
+
+    @Column(name = "title", nullable = false)
+    private String title;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "max_members", nullable = false)
+    private int maxMembers;
+
+    @Column(name = "meeting_time", nullable = false)
+    private LocalDateTime meetingTime;
+
+    @Column(name = "status", nullable = false)
+    private String status; // e.g., "OPEN", "CLOSED", etc.
+
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<RoomsMember> members;
+}

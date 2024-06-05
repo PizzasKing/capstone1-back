@@ -1,0 +1,5 @@
+package com.manbo.homepage.repository;
+
+public class RouteRepository {
+
+}

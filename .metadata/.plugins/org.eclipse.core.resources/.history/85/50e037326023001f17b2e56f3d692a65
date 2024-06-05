@@ -1,0 +1,25 @@
+package com.manbo.homepage.dto;
+
+import com.manbo.homepage.entity.Member;
+import com.manbo.homepage.entity.RoomsMember;
+import lombok.Builder;
+import lombok.Data;
+
+@Data
+@Builder
+public class RoomsMemberDTO {
+
+    private Long roomMemberId;
+    private Long roomId;
+    private Long memberId;
+    private String role;
+
+    public static RoomsMemberDTO toDTO(RoomsMember roomsMember) {
+        return RoomsMemberDTO.builder()
+                .roomMemberId(roomsMember.getRoomMemberId())
+                .roomId(roomsMember.getRoom().getRoomId())
+                .memberId(roomsMember.getMember().getMemberId())
+                .role(roomsMember.getRole().toString())
+                .build();
+    }
+}

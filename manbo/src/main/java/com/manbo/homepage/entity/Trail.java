@@ -18,6 +18,7 @@ public class Trail extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "trail_id")
     private Long trailId; // 산책로 ID
 
     // 작성자 - 외래키
