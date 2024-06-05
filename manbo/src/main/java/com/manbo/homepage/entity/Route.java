@@ -1,5 +1,6 @@
 package com.manbo.homepage.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.manbo.homepage.dto.RouteDTO;
 import jakarta.persistence.*;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Route extends BaseEntity{
+public class Route extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,41 +25,38 @@ public class Route extends BaseEntity{
     @Column(name = "time_idx")
     private Long timeIDX;
 
-    @Column(name = "lat") // 위도
-    private double lat;
+    @Column(name = "latitude") // 위도
+    private double latitude;
 
-    @Column(name = "long") // 경도
-    private double lng;
+    @Column(name = "longitude") // 경도
+    private double longitude;
 
-    @Column(name = "al") // 고도
-    private double al;
+    @Column(name = "altitude") // 고도
+    private double altitude;
 
     // 작성자 - 외래키
-    @JsonIgnore
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "trail_id")
     private Trail trail;
 
+    // 생성자를 이용하여 Trail 속성을 설정
+    public Route(Long timeIDX, double latitude, double longitude, double altitude, Trail trail) {
+        this.timeIDX = timeIDX;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.altitude = altitude;
+        this.trail = trail;
+    }
+
     //insert
     public static Route toSaveEntity(RouteDTO routeDTO, Trail trail) {
-        return Route.builder()
-                .timeIDX(routeDTO.getTimeIDX())
-                .lat(routeDTO.getLat())
-                .lng(routeDTO.getLng())
-                .al(routeDTO.getAl())
-                .trail(trail)
-                .build();
+        return new Route(routeDTO.getTimeIDX(), routeDTO.getLatitude(), routeDTO.getLongitude(), routeDTO.getAltitude(), trail);
     }
 
     // update
     public static Route toUpdateEntity(RouteDTO routeDTO, Trail trail) {
-        return Route.builder()
-                .routeId(routeDTO.getRouteId())
-                .timeIDX(routeDTO.getTimeIDX())
-                .lat(routeDTO.getLat())
-                .lng(routeDTO.getLng())
-                .al(routeDTO.getAl())
-                .trail(trail)
-                .build();
+        return new Route(routeDTO.getRouteId(), routeDTO.getTimeIDX(), routeDTO.getLatitude(), routeDTO.getLongitude(), routeDTO.getAltitude(), trail);
     }
 }
+
