@@ -1,0 +1,30 @@
+package com.manbo.homepage.service;
+
+import com.manbo.homepage.dto.RoomsDTO;
+import com.manbo.homepage.dto.RoomsMemberDTO;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+@Service
+public interface RoomsService {
+
+    RoomsDTO createRoom(RoomsDTO roomsDTO);
+
+    RoomsDTO updateRoomState(Long roomId, String status);
+
+    RoomsDTO getRoomById(Long roomId);
+
+    List<RoomsDTO> getAllRooms();
+
+    void removeRoom(Long roomId);
+
+    RoomsMemberDTO addRoomMember(Long roomId, RoomsMemberDTO roomsMemberDTO);
+
+    void removeRoomMember(Long roomId, Long memberId);
+
+    List<RoomsMemberDTO> getRoomMembers(Long roomId);
+
+    RoomsMemberDTO updateMemberRole(Long roomId, Long memberId, String role);
+}

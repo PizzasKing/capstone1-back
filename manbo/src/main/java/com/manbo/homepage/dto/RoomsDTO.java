@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 @Builder
@@ -33,5 +35,10 @@ public class RoomsDTO {
                 .meetingTime(rooms.getMeetingTime())
                 .status(rooms.getStatus())
                 .build();
+    }
+    public static List<RoomsDTO> toDTOList(List<Rooms> rooms) {
+        return rooms.stream()
+                .map(RoomsDTO::toDTO)
+                .collect(Collectors.toList());
     }
 }

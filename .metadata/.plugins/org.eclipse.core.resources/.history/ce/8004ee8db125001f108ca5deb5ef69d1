@@ -1,0 +1,47 @@
+package com.manbo.homepage.service;
+
+import com.manbo.homepage.dto.RoomsMemberDTO;
+import com.manbo.homepage.entity.Member;
+import com.manbo.homepage.entity.MemberRole;
+import com.manbo.homepage.entity.Rooms;
+import com.manbo.homepage.entity.RoomsMember;
+import com.manbo.homepage.repository.RoomsMemberRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class RoomsMemberService {
+
+    @Autowired
+    private RoomsMemberRepository roomsMemberRepository;
+
+    public List<RoomsMemberDTO> getAllMembersByRoomId(Long roomId) {
+        return roomsMemberRepository.findAllByRoomRoomId(roomId).stream()
+                .map(RoomsMemberDTO::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    public RoomsMemberDTO addMember(RoomsMemberDTO roomsMemberDTO) {
+        RoomsMember roomsMember = RoomsMember.builder()
+                .room(Rooms.builder().roomId(roomsMemberDTO.getRoomId()).build())
+                .member(Member.builder().memberId(roomsMemberDTO.getMemberId()).build())
+                .role(MemberRole.valueOf(roomsMemberDTO.getRole()))
+                .build();
+        roomsMember = roomsMemberRepository.save(roomsMember);
+        return RoomsMemberDTO.toDTO(roomsMember);
+    }
+
+    public void removeMember(Long roomMemberId) {
+        roomsMemberRepository.deleteById(roomMemberId);
+    }
+
+    public void updateMemberRole(Long roomMemberId, String role) {
+        RoomsMember roomsMember = roomsMemberRepository.findById(roomMemberId)
+                .orElseThrow(() -> new RuntimeException("Room member not found"));
+        roomsMember.setRole(MemberRole.valueOf(role));
+        roomsMemberRepository.save(roomsMember);
+    }
+}

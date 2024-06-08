@@ -1,0 +1,12 @@
+package com.manbo.homepage.repository;
+
+import com.manbo.homepage.entity.TrailReview;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface TrailReviewRepository extends JpaRepository<TrailReview, Long> {
+    List<TrailReview> findAllByTrailId(Long trailId);
+}

@@ -1,0 +1,80 @@
+package com.manbo.homepage.entity;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.manbo.homepage.dto.RoomsDTO;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Entity
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "rooms")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+public class Rooms extends BaseEntity {
+
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long roomId;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "trail_id")
+    private Trail trail; // 수정: Trail 엔티티를 직접 참조
+
+    @Column(nullable = false)
+    private String title;
+
+    @Column(nullable = false)
+    private String description;
+
+    @Column(name = "max_members", nullable = false)
+    private int maxMembers;
+
+    @Column(name = "meeting_time", nullable = false)
+    private LocalDateTime meetingTime;
+
+    @Column(nullable = false)
+    private String status;
+
+    // 방에 속한 회원 리스트
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    private List<RoomsMember> roomMembers;
+
+ // insert
+    public static Rooms toSaveEntity(RoomsDTO roomsDTO, TrailRepository trailRepository) {
+        Trail trail = trailRepository.findById(roomsDTO.getTrailId())
+                .orElseThrow(() -> new RuntimeException("Trail not found")); // 해당 ID로 Trail을 찾아옴
+
+        return Rooms.builder()
+                .trail(trail) // Trail 객체를 설정
+                .title(roomsDTO.getTitle())
+                .description(roomsDTO.getDescription())
+                .maxMembers(roomsDTO.getMaxMembers())
+                .meetingTime(roomsDTO.getMeetingTime())
+                .status(roomsDTO.getStatus())
+                .build();
+    }
+
+    // update
+    public static Rooms toUpdateEntity(RoomsDTO roomsDTO, TrailRepository trailRepository) {
+        Trail trail = trailRepository.findById(roomsDTO.getTrailId())
+                .orElseThrow(() -> new RuntimeException("Trail not found")); // 해당 ID로 Trail을 찾아옴
+
+        return Rooms.builder()
+                .roomId(roomsDTO.getRoomId())
+                .trail(trail) // Trail 객체를 설정
+                .title(roomsDTO.getTitle())
+                .description(roomsDTO.getDescription())
+                .maxMembers(roomsDTO.getMaxMembers())
+                .meetingTime(roomsDTO.getMeetingTime())
+                .status(roomsDTO.getStatus())
+                .build();
+    }
+
+}

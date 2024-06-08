@@ -27,21 +27,21 @@ public class FreeBoardService {
 	private final FreeBoardRepository freeBoardRepository;
 
 	public void save(FreeBoard freeBoard, MultipartFile freeBoardFile) throws Exception, IOException {
-		
-		if(!freeBoardFile.isEmpty()) {
-            UUID uuid = UUID.randomUUID();
-            String freeFilename = uuid + "_" + freeBoardFile.getOriginalFilename();
 
-            String freeFilepath ="C:/projectfiles/" + freeFilename;
-            /*String freeFilepath ="/Users/Healer/springfiles/" + freeFilename; //희린 전용*/
+		if (!freeBoardFile.isEmpty()) {
+			UUID uuid = UUID.randomUUID();
+			String freeFilename = uuid + "_" + freeBoardFile.getOriginalFilename();
 
-            File savedFreeFile = new File(freeFilepath); //실제 저장된 파일
-            freeBoardFile.transferTo(savedFreeFile);
+			String freeFilepath = "C:/projectfiles/" + freeFilename;
+			/* String freeFilepath = "/Users/Healer/springfiles/" + freeFilename; //희린 전용 */
 
-            freeBoard.setFreeFilename(freeFilename);
-            freeBoard.setFreeFilepath(freeFilepath); //파일 경로 설정
+			File savedFreeFile = new File(freeFilepath); // 실제 저장된 파일
+			freeBoardFile.transferTo(savedFreeFile);
+
+			freeBoard.setFreeFilename(freeFilename);
+			freeBoard.setFreeFilepath(freeFilepath); // 파일 경로 설정
 		}
-		
+
 		freeBoardRepository.save(freeBoard);
 	}
 
@@ -68,53 +68,48 @@ public class FreeBoardService {
 	}
 
 	public FreeBoardDTO update(FreeBoardDTO freeBoardDTO, MultipartFile freeBoardFile) throws Exception, IOException {
-		if(!freeBoardFile.isEmpty()) {
-            UUID uuid = UUID.randomUUID();
-            String freeFilename = uuid + "_" + freeBoardFile.getOriginalFilename();
-            String freeFilepath ="C:/projectfiles/" + freeFilename;
+		if (!freeBoardFile.isEmpty()) {
+			UUID uuid = UUID.randomUUID();
+			String freeFilename = uuid + "_" + freeBoardFile.getOriginalFilename();
+			String freeFilepath = "C:/projectfiles/" + freeFilename;
 
-            File savedFreeFile = new File(freeFilepath); //실제 저장된 파일
-            freeBoardFile.transferTo(savedFreeFile);
+			File savedFreeFile = new File(freeFilepath); // 실제 저장된 파일
+			freeBoardFile.transferTo(savedFreeFile);
 
 			freeBoardDTO.setFreeFilename(freeFilename);
 			freeBoardDTO.setFreeFilepath(freeFilepath);
-		}else {
-			freeBoardDTO.setFreeFilename(findById(freeBoardDTO.getFbid()).getFreeFilename());
-			freeBoardDTO.setFreeFilepath(findById(freeBoardDTO.getFbid()).getFreeFilepath());
+		} else {
+			FreeBoardDTO existingFreeBoardDTO = findById(freeBoardDTO.getFbid());
+			freeBoardDTO.setFreeFilename(existingFreeBoardDTO.getFreeFilename());
+			freeBoardDTO.setFreeFilepath(existingFreeBoardDTO.getFreeFilepath());
 		}
 		FreeBoard freeBoard = FreeBoard.toUpdateEntity(freeBoardDTO);
 		freeBoardRepository.save(freeBoard);
 		return findById(freeBoardDTO.getFbid());
-		
+
 	}
-	
+
 	public Page<FreeBoardDTO> searchByTitle(String keyword, Pageable pageable) {
-	    return freeBoardRepository.findByFbtitleContaining(keyword, pageable)
-	            .map(freeBoard -> FreeBoardDTO.toSaveDTO(freeBoard));
+		return freeBoardRepository.findByFbtitleContaining(keyword, pageable).map(FreeBoardDTO::toSaveDTO);
 	}
 
 	public Page<FreeBoardDTO> searchByContent(String keyword, Pageable pageable) {
-	    return freeBoardRepository.findByFbcontentContaining(keyword, pageable)
-	            .map(freeBoard -> FreeBoardDTO.toSaveDTO(freeBoard));
+		return freeBoardRepository.findByFbcontentContaining(keyword, pageable).map(FreeBoardDTO::toSaveDTO);
 	}
 
-	
-	
-	
 	@Transactional
 	public void updateHits(Long fbid) {
 		freeBoardRepository.updateHits(fbid);
 	}
 
-	//페이징
 	public Page<FreeBoardDTO> paging(Pageable pageable) {
-	    Pageable reversePageable = PageRequest.of(
-	            pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Direction.DESC, "fbid"));
-        Page<FreeBoard> freeBoardPage = freeBoardRepository.findAll(reversePageable);
-        return freeBoardPage.map(freeBoard -> FreeBoardDTO.toSaveDTO(freeBoard));
-    }
+		Pageable reversePageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(),
+				Sort.by(Sort.Direction.DESC, "fbid"));
+		Page<FreeBoard> freeBoardPage = freeBoardRepository.findAll(reversePageable);
+		return freeBoardPage.map(FreeBoardDTO::toSaveDTO);
+	}
 
-    public List<FreeBoard> mainList() {
-        return freeBoardRepository.findTop5ByOrderByCreatedDateDesc();
-    }
+	public List<FreeBoard> mainList() {
+		return freeBoardRepository.findTop5ByOrderByCreatedDateDesc();
+	}
 }

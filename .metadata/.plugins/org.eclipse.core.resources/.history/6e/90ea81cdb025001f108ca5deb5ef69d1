@@ -1,0 +1,12 @@
+package com.manbo.homepage.repository;
+
+import com.manbo.homepage.entity.RoomsMember;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface RoomsMemberRepository extends JpaRepository<RoomsMember, Long> {
+    List<RoomsMember> findAllByRoomRoomId(Long roomId);
+}

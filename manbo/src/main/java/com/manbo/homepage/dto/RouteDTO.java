@@ -1,7 +1,6 @@
 package com.manbo.homepage.dto;
 
 import com.manbo.homepage.entity.Route;
-import com.manbo.homepage.entity.Trail;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,16 +17,16 @@ public class RouteDTO {
     private double latitude;
     private double longitude;
     private double altitude;
-    private Trail trail; // Trail 엔티티를 직접 참조
+    private Long trailId; // Trail 엔티티의 ID를 직접 참조
 
     public static RouteDTO toSaveDTO(Route route) {
         return RouteDTO.builder()
                 .routeId(route.getRouteId())
                 .timeIDX(route.getTimeIDX())
-                .latitude(route.getLatitude()) // 수정
-                .longitude(route.getLongitude()) // 수정
-                .altitude(route.getAltitude()) // 수정
-                .trail(route.getTrail())
+                .latitude(route.getLatitude())
+                .longitude(route.getLongitude())
+                .altitude(route.getAltitude())
+                .trailId(route.getTrail().getTrailId())
                 .build();
     }
 }

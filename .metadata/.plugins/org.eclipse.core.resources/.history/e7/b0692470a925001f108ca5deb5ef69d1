@@ -1,0 +1,44 @@
+package com.manbo.homepage.dto;
+
+import com.manbo.homepage.entity.Rooms;
+import com.manbo.homepage.entity.Trail;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class RoomsDTO {
+
+    private Long roomId;
+    private Trail trail; // 산책로 정보를 담은 DTO 객체
+    private String title;
+    private String description;
+    private int maxMembers;
+    private LocalDateTime meetingTime;
+    private String status;
+    private List<RoomsMemberDTO> roomMembers;
+
+    public static RoomsDTO toDTO(Rooms rooms) {
+        return RoomsDTO.builder()
+                .roomId(rooms.getRoomId())
+                .trail(TrailDTO.toSaveDTO(rooms.getTrail())) // 산책로 정보를 DTO로 변환하여 설정
+                .title(rooms.getTitle())
+                .description(rooms.getDescription())
+                .maxMembers(rooms.getMaxMembers())
+                .meetingTime(rooms.getMeetingTime())
+                .status(rooms.getStatus())
+                .roomMembers(rooms.getRoomMembers().stream()
+                        .map(RoomsMemberDTO::toDTO)
+                        .collect(Collectors.toList()))
+                .build();
+    }
+}

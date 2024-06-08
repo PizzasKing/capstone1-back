@@ -1,0 +1,39 @@
+package com.manbo.homepage.controller;
+
+import com.manbo.homepage.dto.RoomsMemberDTO;
+import com.manbo.homepage.service.RoomsMemberService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/rooms-members")
+public class RoomsMemberController {
+
+    @Autowired
+    private RoomsMemberService roomsMemberService;
+
+    @GetMapping("/room/{roomId}")
+    public ResponseEntity<List<RoomsMemberDTO>> getMembersByRoomId(@PathVariable Long roomId) {
+        return ResponseEntity.ok(roomsMemberService.getAllMembersByRoomId(roomId));
+    }
+
+    @PostMapping
+    public ResponseEntity<RoomsMemberDTO> addMember(@RequestBody RoomsMemberDTO roomsMemberDTO) {
+        return ResponseEntity.ok(roomsMemberService.addMember(roomsMemberDTO));
+    }
+
+    @DeleteMapping("/{roomMemberId}")
+    public ResponseEntity<Void> removeMember(@PathVariable Long roomMemberId) {
+        roomsMemberService.removeMember(roomMemberId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping("/{roomMemberId}/role")
+    public ResponseEntity<Void> updateMemberRole(@PathVariable Long roomMemberId, @RequestParam String role) {
+        roomsMemberService.updateMemberRole(roomMemberId, role);
+        return ResponseEntity.ok().build();
+    }
+}

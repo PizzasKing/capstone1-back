@@ -11,7 +11,7 @@ import lombok.*;
 @Table(name = "rooms_member")
 public class RoomsMember extends BaseEntity {
 
-    @Id
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "room_member_id")
     private Long roomMemberId;
@@ -28,5 +28,8 @@ public class RoomsMember extends BaseEntity {
     @Column(name = "role", nullable = false)
     private MemberRole role; // "OWNER", "PARTICIPANT"
     
+    public void setRole(MemberRole role) {
+        this.role = role;
+    }
     
 }

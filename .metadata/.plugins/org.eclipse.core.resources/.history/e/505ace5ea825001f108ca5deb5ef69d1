@@ -1,0 +1,73 @@
+package com.manbo.homepage.entity;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.manbo.homepage.dto.RoomsDTO;
+
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Entity
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "rooms")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+public class Rooms extends BaseEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long roomId;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "trail_id")
+    private Trail trailId;
+
+    @Column(nullable = false)
+    private String title;
+
+    @Column(nullable = false)
+    private String description;
+
+    @Column(name = "max_members", nullable = false)
+    private int maxMembers;
+
+    @Column(name = "meeting_time", nullable = false)
+    private LocalDateTime meetingTime;
+
+    @Column(nullable = false)
+    private String status;
+
+    // 방에 속한 회원 리스트
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    private List<RoomsMember> roomMembers;
+
+    // insert
+    public static Rooms toSaveEntity(RoomsDTO roomsDTO) {
+        return Rooms.builder()
+                .trailId(roomsDTO.getTrailId())
+                .title(roomsDTO.getTitle())
+                .description(roomsDTO.getDescription())
+                .maxMembers(roomsDTO.getMaxMembers())
+                .meetingTime(roomsDTO.getMeetingTime())
+                .status(roomsDTO.getStatus())
+                .build();
+    }
+
+    // update
+    public static Rooms toUpdateEntity(RoomsDTO roomsDTO) {
+        return Rooms.builder()
+                .roomId(roomsDTO.getRoomId())
+                .trailId(roomsDTO.getTrailId())
+                .title(roomsDTO.getTitle())
+                .description(roomsDTO.getDescription())
+                .maxMembers(roomsDTO.getMaxMembers())
+                .meetingTime(roomsDTO.getMeetingTime())
+                .status(roomsDTO.getStatus())
+                .build();
+    }
+}

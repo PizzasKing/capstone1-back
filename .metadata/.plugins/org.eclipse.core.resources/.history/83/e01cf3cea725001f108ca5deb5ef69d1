@@ -1,0 +1,38 @@
+package com.manbo.homepage.controller;
+
+import com.manbo.homepage.dto.TrailDTO;
+import com.manbo.homepage.service.TrailService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/trails")
+public class TrailController {
+
+    @Autowired
+    private TrailService trailService;
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TrailDTO> getTrailById(@PathVariable Long id) {
+        return ResponseEntity.ok(trailService.getTrailById(id));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<TrailDTO>> getAllTrails() {
+        return ResponseEntity.ok(trailService.getAllTrails());
+    }
+
+    @PostMapping
+    public ResponseEntity<TrailDTO> addTrail(@RequestBody TrailDTO trailDTO) {
+        return ResponseEntity.ok(trailService.addTrail(trailDTO));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTrail(@PathVariable Long id) {
+        trailService.deleteTrail(id);
+        return ResponseEntity.noContent().build();
+    }
+}
