@@ -53,4 +53,16 @@ public class MemberDTO {
                 .build();
         return memberDTO;
     }
+
+    // MemberDTO -> Member
+    public static Member toEntity(MemberDTO memberDTO) {
+        return Member.builder()
+                .memberId(memberDTO.getMemberId())
+                .mid(memberDTO.getMid())
+                .password(memberDTO.getPassword())
+                .email(memberDTO.getEmail())
+                .name(memberDTO.getName())
+                .role(memberDTO.getRole())
+                .build();
+    }
 }
