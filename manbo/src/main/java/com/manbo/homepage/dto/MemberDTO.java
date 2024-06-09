@@ -45,8 +45,6 @@ public class MemberDTO {
                 .password(member.getPassword())
                 .email(member.getEmail())
                 .name(member.getName())
-//                .rentalCount(member.getRentalCount())
-//                .rentalAble(member.getRentalAble())
                 .role(member.getRole())
                 .createdDate(member.getCreatedDate())
                 .updatedDate(member.getUpdatedDate())

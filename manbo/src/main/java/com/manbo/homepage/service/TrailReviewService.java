@@ -1,13 +1,14 @@
 package com.manbo.homepage.service;
 
-import com.manbo.homepage.dto.TrailReviewDTO;
-import com.manbo.homepage.entity.TrailReview;
-import com.manbo.homepage.repository.TrailReviewRepository;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import com.manbo.homepage.dto.TrailReviewDTO;
+import com.manbo.homepage.entity.TrailReview;
+import com.manbo.homepage.repository.TrailReviewRepository;
 
 @Service
 public class TrailReviewService {
@@ -15,26 +16,37 @@ public class TrailReviewService {
     @Autowired
     private TrailReviewRepository trailReviewRepository;
 
-    @Autowired
-    private TrailService trailService;
-
-    public List<TrailReviewDTO> getAllReviewsByTrailId(Long trailId) {
-        return trailReviewRepository.findAllByTrail_TrailId(trailId).stream()
+    public List<TrailReviewDTO> getAllTrailReviews() {
+        List<TrailReview> reviews = trailReviewRepository.findAll();
+        return reviews.stream()
                 .map(TrailReviewDTO::toSaveDTO)
                 .collect(Collectors.toList());
     }
 
-    public TrailReviewDTO addReview(TrailReviewDTO reviewDTO) {
-        TrailReview review = TrailReview.toSaveEntity(reviewDTO);
-        review = trailReviewRepository.save(review);
-        // 트레일 평점 업데이트 로직 추가
-        updateTrailRating(review.getTrail().getTrailId());
+    public TrailReviewDTO getTrailReviewById(Long id) {
+        TrailReview review = trailReviewRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Trail review not found"));
         return TrailReviewDTO.toSaveDTO(review);
     }
 
-    // 트레일 평점 업데이트 메서드
-    private void updateTrailRating(Long trailId) {
-        double averageRating = trailReviewRepository.findAverageRatingByTrailId(trailId);
-        trailService.updateTrailRating(trailId, averageRating);
+    public TrailReviewDTO createTrailReview(TrailReviewDTO reviewDTO) {
+        TrailReview review = TrailReview.toSaveEntity(reviewDTO);
+        TrailReview savedReview = trailReviewRepository.save(review);
+        return TrailReviewDTO.toSaveDTO(savedReview);
+    }
+
+    public TrailReviewDTO updateTrailReview(Long id, TrailReviewDTO reviewDTO) {
+        TrailReview review = trailReviewRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Trail review not found"));
+        review.setReviewRank(reviewDTO.getReviewRank());
+        review.setReviewContent(reviewDTO.getReviewContent());
+        review.setTrail(reviewDTO.getTrail());
+        review.setMember(reviewDTO.getMember());
+        TrailReview updatedReview = trailReviewRepository.save(review);
+        return TrailReviewDTO.toSaveDTO(updatedReview);
+    }
+
+    public void deleteTrailReview(Long id) {
+        trailReviewRepository.deleteById(id);
     }
 }

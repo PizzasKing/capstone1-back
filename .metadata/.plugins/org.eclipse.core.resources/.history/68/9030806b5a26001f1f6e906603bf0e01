@@ -1,0 +1,7 @@
+package com.manbo.homepage.repository;
+
+import com.manbo.homepage.entity.Recommend;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface RecommendBoardRepository extends JpaRepository<Recommend, Long> {
+}

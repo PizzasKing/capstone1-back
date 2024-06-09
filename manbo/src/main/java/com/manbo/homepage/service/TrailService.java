@@ -1,13 +1,14 @@
 package com.manbo.homepage.service;
 
-import com.manbo.homepage.dto.TrailDTO;
-import com.manbo.homepage.entity.Trail;
-import com.manbo.homepage.repository.TrailRepository;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import com.manbo.homepage.dto.TrailDTO;
+import com.manbo.homepage.entity.Trail;
+import com.manbo.homepage.repository.TrailRepository;
 
 @Service
 public class TrailService {
@@ -15,31 +16,37 @@ public class TrailService {
     @Autowired
     private TrailRepository trailRepository;
 
-    public TrailDTO getTrailById(Long trailId) {
-        Trail trail = trailRepository.findById(trailId)
-                .orElseThrow(() -> new RuntimeException("Trail not found"));
-        return TrailDTO.toSaveDTO(trail);
+    // 산책로 등록
+    public TrailDTO saveTrail(TrailDTO trailDTO) {
+        Trail trail = Trail.toSaveEntity(trailDTO);
+        Trail savedTrail = trailRepository.save(trail);
+        return TrailDTO.toSaveDTO(savedTrail);
     }
 
+    // 산책로 상세 조회
+    public TrailDTO getTrail(Long id) {
+        Trail trail = trailRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Trail not found"));
+        return TrailDTO.toEntity(trail);
+    }
+
+    // 산책로 목록 조회
     public List<TrailDTO> getAllTrails() {
-        return trailRepository.findAll().stream()
-                .map(TrailDTO::toSaveDTO)
+        List<Trail> trails = trailRepository.findAll();
+        return trails.stream()
+                .map(TrailDTO::toEntity)
                 .collect(Collectors.toList());
     }
 
-    public TrailDTO addTrail(TrailDTO trailDTO) {
-        Trail trail = Trail.toSaveEntity(trailDTO);
-        trail = trailRepository.save(trail);
-        return TrailDTO.toSaveDTO(trail);
+    // 산책로 수정
+    public TrailDTO updateTrail(Long id, TrailDTO trailDTO) {
+        Trail trail = trailRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Trail not found"));
+        Trail updatedTrail = Trail.toUpdateEntity(trailDTO);
+        Trail savedTrail = trailRepository.save(updatedTrail);
+        return TrailDTO.toEntity(savedTrail);
     }
 
-    public void removeTrail(Long trailId) {
-        trailRepository.deleteById(trailId);
-    }
-
-    public void updateTrailRating(Long trailId, double averageRating) {
-        Trail trail = trailRepository.findById(trailId).orElseThrow(() -> new IllegalArgumentException("Invalid trail ID"));
-        trail.setRating(averageRating);
-        trailRepository.save(trail);
+    // 산책로 삭제
+    public void deleteTrail(Long id) {
+        trailRepository.deleteById(id);
     }
 }

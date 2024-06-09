@@ -1,0 +1,11 @@
+package com.manbo.homepage.repository;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import com.manbo.homepage.entity.Trail;
+
+public interface TrailRepository extends JpaRepository<Trail, Long> {
+	Page<Trail> findByTrailNameContaining(String trailName, Pageable pageable);
+	Page<Trail> findByStartLocationContaining(String startLocation, Pageable pageable);
+}
