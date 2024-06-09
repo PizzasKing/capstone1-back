@@ -1,6 +1,7 @@
 package com.manbo.homepage.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.manbo.homepage.dto.TrailReviewDTO;
 
 import jakarta.persistence.*;
@@ -13,11 +14,14 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @Builder
+@Table(name = "trail_review")
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class TrailReview extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "review_id")
     private Long reviewId;
 
     @Column(name = "review_rank", nullable = false)

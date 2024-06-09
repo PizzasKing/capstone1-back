@@ -9,7 +9,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,114 +19,82 @@ import com.manbo.homepage.entity.NoticeBoard;
 import com.manbo.homepage.service.MemberService;
 import com.manbo.homepage.service.NoticeBoardService;
 
-import org.springframework.ui.Model;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
-
-@Controller
+@RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/notice")
 @Slf4j
 public class NoticeBoardController {
-	
+
     private final NoticeBoardService noticeBoardService;
     private final MemberService memberService;
 
-	//쓰기 페이지
-    @GetMapping("notice/write")
-    public String writeForm(@AuthenticationPrincipal SecurityUser principal, Model model) {
-        if(principal == null){
-            return "notice/write";
-        }else{
-            MemberDTO memberDTO = memberService.findByMid(principal);
-            model.addAttribute("member", memberDTO);
-            return "notice/write";
-        }
-	}
+    // 쓰기 처리
+    @PostMapping("/write")
+    public ResponseEntity<String> write(@RequestBody NoticeBoardDTO noticeBoardDTO,
+                                        @AuthenticationPrincipal SecurityUser principal,
+                                        @RequestParam("noticeBoardFile") MultipartFile noticeBoardFile) throws IOException, Exception {
+        NoticeBoard noticeBoard = NoticeBoard.toSaveEntity(noticeBoardDTO);
+        noticeBoard.setMember(principal.getMember());
+        noticeBoard.setNbhit(0);
+        noticeBoardService.save(noticeBoard, noticeBoardFile);
+        return ResponseEntity.status(HttpStatus.CREATED).body("게시글 작성 성공!");
+    }
 
-	//쓰기 처리
-	@PostMapping("/notice/write")
-	public String write(@ModelAttribute NoticeBoard noticeBoard,
-						@AuthenticationPrincipal SecurityUser principal,
-						MultipartFile noticeBoardFile) throws IOException, Exception {
-		noticeBoard.setMember(principal.getMember());
-		noticeBoard.setNbhit(0);
-		noticeBoardService.save(noticeBoard, noticeBoardFile);
+    // 수정 처리
+    @PutMapping("/update/{nbid}")
+    public ResponseEntity<String> update(@PathVariable Long nbid,
+                                         @RequestBody NoticeBoardDTO noticeBoardDTO,
+                                         @RequestParam("noticeBoardFile") MultipartFile noticeBoardFile,
+                                         @AuthenticationPrincipal SecurityUser principal) throws IOException, Exception {
+        NoticeBoard noticeBoard = NoticeBoard.toUpdateEntity(noticeBoardDTO);
+        noticeBoard.setMember(principal.getMember());
+        NoticeBoardDTO upNoticeBoard = noticeBoardService.update(noticeBoardDTO, noticeBoardFile);
+        return ResponseEntity.ok("게시글 수정 성공!");
+    }
 
-		return "redirect:/notice/pagelist";
-	}
-	
-	//수정 페이지
-	@GetMapping("/notice/update/{nbid}")
-	public String updateForm(@PathVariable Long nbid, Model model, @AuthenticationPrincipal SecurityUser principal) {
-		NoticeBoardDTO noticeBoardDTO = noticeBoardService.findById(nbid);
-		model.addAttribute("noticeBoard", noticeBoardDTO);
-        if(principal == null){
-            return "notice/update";
-        }else{
-            MemberDTO memberDTO = memberService.findByMid(principal);
-            model.addAttribute("member", memberDTO);
-            return "notice/update";
-        }
-	}
-	
-	//수정 처리
-	@PostMapping("/notice/update/{nbid}")
-	public String update(@ModelAttribute NoticeBoardDTO noticeBoard,
-						MultipartFile noticeBoardFile,
-						@AuthenticationPrincipal SecurityUser principal,
-    		            Model model) throws IOException, Exception {
-    	noticeBoard.setMember(principal.getMember());
-    	NoticeBoardDTO upNoticeBoard =  noticeBoardService.update(noticeBoard, noticeBoardFile);
-    	model.addAttribute("noticeBoard", upNoticeBoard);
-		return "redirect:/notice/" + noticeBoard.getNbid();
-	}
-
-	//페이징, 글 목록
-    @GetMapping("/notice/pagelist")
-    public String pagelist(
+    // 페이징, 글 목록
+    @GetMapping("/pagelist")
+    public ResponseEntity<Page<NoticeBoardDTO>> pagelist(
             @RequestParam(value = "page", defaultValue = "0") int page,
-            @RequestParam(value = "size", defaultValue = "10") int size,
-            @AuthenticationPrincipal SecurityUser principal,
-            Model model) {
+            @RequestParam(value = "size", defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("createdDate").descending());
         Page<NoticeBoardDTO> noticeBoardPage = noticeBoardService.paging(pageable);
-        List<NoticeBoardDTO> noticeBoardDTOList = noticeBoardService.findAll();
-        model.addAttribute("noticeBoardPage", noticeBoardPage);
-        model.addAttribute("noticeBoardList", noticeBoardDTOList);
-        if(principal == null){
-            return "notice/pagelist";
-        }else{
-            MemberDTO memberDTO = memberService.findByMid(principal);
-            model.addAttribute("member", memberDTO);
-            return "notice/pagelist";
-        }
-    }
-	
-    //상세보기
-    @GetMapping("/notice/{nbid}")
-    public String getDetail(@PathVariable Long nbid, Model model,
-    						@AuthenticationPrincipal SecurityUser principal) {
-    	noticeBoardService.updateHits(nbid);
-    	NoticeBoardDTO noticeBoardDTO = noticeBoardService.findById(nbid);
-    	model.addAttribute("noticeBoard", noticeBoardDTO);
-        if(principal == null){
-            return "notice/detail";
-        }else{
-            MemberDTO memberDTO = memberService.findByMid(principal);
-            model.addAttribute("member", memberDTO);
-            return "notice/detail";
-        }
-    }
-	//삭제
-	@GetMapping("/notice/delete/{nbid}")
-	public String deleteHopeBoard(@PathVariable Long nbid) {
-    	noticeBoardService.deleteById(nbid);
-    	return "redirect:/notice/pagelist";
+        return ResponseEntity.ok(noticeBoardPage);
     }
 
-    @GetMapping("/notice/main") @ResponseBody
-    public List<NoticeBoard> mainList(){
-        return noticeBoardService.mainList();
+    // 상세보기
+    @GetMapping("/{nbid}")
+    public ResponseEntity<NoticeBoardDTO> getDetail(@PathVariable Long nbid) {
+        noticeBoardService.updateHits(nbid);
+        NoticeBoardDTO noticeBoardDTO = noticeBoardService.findById(nbid);
+        return ResponseEntity.ok(noticeBoardDTO);
     }
-			
+
+    // 삭제
+    @DeleteMapping("/delete/{nbid}")
+    public ResponseEntity<String> deleteHopeBoard(@PathVariable Long nbid) {
+        noticeBoardService.deleteById(nbid);
+        return ResponseEntity.ok("게시글 삭제 성공!");
+    }
+
+    // 메인 리스트
+    @GetMapping("/main")
+    public ResponseEntity<List<NoticeBoard>> mainList() {
+        List<NoticeBoard> mainList = noticeBoardService.mainList();
+        return ResponseEntity.ok(mainList);
+    }
+
+    // 회원 정보 조회
+    @GetMapping("/member")
+    public ResponseEntity<MemberDTO> getMember(@AuthenticationPrincipal SecurityUser principal) {
+        if (principal == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        MemberDTO memberDTO = memberService.findByMid(principal);
+        return ResponseEntity.ok(memberDTO);
+    }
 }

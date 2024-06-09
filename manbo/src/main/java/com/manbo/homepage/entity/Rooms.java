@@ -1,5 +1,6 @@
 package com.manbo.homepage.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.manbo.homepage.dto.RoomsDTO;
 
 import jakarta.persistence.*;
@@ -13,10 +14,12 @@ import java.time.LocalDateTime;
 @Table(name = "rooms")
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Rooms extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "room_id")
     private Long roomId;
 
     @ManyToOne(fetch = FetchType.EAGER)
