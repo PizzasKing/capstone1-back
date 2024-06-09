@@ -23,8 +23,6 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/freeboard")
 public class FreeBoardController {
 	private final FreeBoardService freeBoardService;
-	private final MemberService memberService;
-
 	@GetMapping("/list")
 	public Page<FreeBoardDTO> pagelist(
 			@RequestParam(value = "page", defaultValue = "0") int page,
@@ -43,11 +41,9 @@ public class FreeBoardController {
 			} else if ("content".equals(searchOption)) {
 				freeBoardPage = freeBoardService.searchByContent(keyword, pageable);
 			} else {
-				// 기본적으로는 제목으로 검색
 				freeBoardPage = freeBoardService.searchByTitle(keyword, pageable);
 			}
 		} else {
-			// 검색 옵션 및 키워드가 없는 경우에는 기존 페이징 로직을 수행
 			freeBoardPage = freeBoardService.paging(pageable);
 		}
 
@@ -60,17 +56,18 @@ public class FreeBoardController {
 	}
 
 	@PostMapping("/write")
-	public void write(@RequestBody FreeBoard freeBoard, @AuthenticationPrincipal SecurityUser principal,
-			MultipartFile freeBoardFile) throws IOException, Exception {
-		freeBoard.setMember(principal.getMember());
-		freeBoard.setFbhit(0);
+	public void write(@RequestBody FreeBoardDTO freeBoardDTO, @AuthenticationPrincipal SecurityUser principal,
+			@RequestParam("freeBoardFile") MultipartFile freeBoardFile) throws IOException, Exception {
+		FreeBoard freeBoard = FreeBoard.toSaveEntity(freeBoardDTO);
+		freeBoard.setMember(principal.getMember()); // 설정된 인증된 사용자로 member 설정
 		freeBoardService.save(freeBoard, freeBoardFile);
 	}
 
 	@PutMapping("/update/{fbid}")
 	public FreeBoardDTO update(@PathVariable Long fbid, @RequestBody FreeBoardDTO freeBoardDTO,
-			MultipartFile freeBoardFile, @AuthenticationPrincipal SecurityUser principal) throws IOException, Exception {
-		freeBoardDTO.setMember(principal.getMember());
+			@RequestParam("freeBoardFile") MultipartFile freeBoardFile, @AuthenticationPrincipal SecurityUser principal) throws IOException, Exception {
+		FreeBoard freeBoard = FreeBoard.toUpdateEntity(freeBoardDTO);
+		freeBoard.setMember(principal.getMember()); // 설정된 인증된 사용자로 member 설정
 		return freeBoardService.update(freeBoardDTO, freeBoardFile);
 	}
 
@@ -84,3 +81,4 @@ public class FreeBoardController {
 		return freeBoardService.mainList();
 	}
 }
+

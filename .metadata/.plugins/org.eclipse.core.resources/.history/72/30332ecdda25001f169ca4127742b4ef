@@ -1,0 +1,10 @@
+package com.manbo.homepage.repository;
+
+import com.manbo.homepage.entity.TrailLike;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+public interface TrailLikeRepository extends JpaRepository<TrailLike, Long> {
+    Optional<TrailLike> findByMemberIdAndTrailId(Long memberId, Long trailId);
+}

@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.manbo.homepage.dto.FreeBoardDTO;
 import com.manbo.homepage.entity.FreeBoard;
+import com.manbo.homepage.entity.Member;
 import com.manbo.homepage.repository.FreeBoardRepository;
 
 import jakarta.transaction.Transactional;
@@ -27,13 +28,11 @@ public class FreeBoardService {
 	private final FreeBoardRepository freeBoardRepository;
 
 	public void save(FreeBoard freeBoard, MultipartFile freeBoardFile) throws Exception, IOException {
-
 		if (!freeBoardFile.isEmpty()) {
 			UUID uuid = UUID.randomUUID();
 			String freeFilename = uuid + "_" + freeBoardFile.getOriginalFilename();
-
 			String freeFilepath = "C:/projectfiles/" + freeFilename;
-			/* String freeFilepath = "/Users/Healer/springfiles/" + freeFilename; //희린 전용 */
+			// String freeFilepath = "/Users/Healer/springfiles/" + freeFilename; //희린 전용
 
 			File savedFreeFile = new File(freeFilepath); // 실제 저장된 파일
 			freeBoardFile.transferTo(savedFreeFile);
@@ -86,7 +85,6 @@ public class FreeBoardService {
 		FreeBoard freeBoard = FreeBoard.toUpdateEntity(freeBoardDTO);
 		freeBoardRepository.save(freeBoard);
 		return findById(freeBoardDTO.getFbid());
-
 	}
 
 	public Page<FreeBoardDTO> searchByTitle(String keyword, Pageable pageable) {

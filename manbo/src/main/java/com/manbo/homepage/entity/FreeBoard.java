@@ -49,21 +49,18 @@ public class FreeBoard extends BaseEntity {
 	@Column
 	private String freeFilepath;
 
-	// FreeBoard 엔터티에 작성자 정보 추가
-	// 작성자 - 외래키
-    @JsonIgnore
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="mid")
 	private Member member;
 
 	@OneToMany(mappedBy = "freeboard", cascade = CascadeType.ALL)
 	@OrderBy("frid desc")
-    @JsonIgnore
+	@JsonIgnore
 	private List<FreeReply> freeReplyList;
 
-	// insert
 	public static FreeBoard toSaveEntity(FreeBoardDTO freeBoardDTO) {
-		FreeBoard freeBoard = FreeBoard.builder()
+		return FreeBoard.builder()
 				.fbtitle(freeBoardDTO.getFbtitle())
 				.fbcontent(freeBoardDTO.getFbcontent())
 				.fbhit(0)
@@ -71,12 +68,10 @@ public class FreeBoard extends BaseEntity {
 				.freeFilepath(freeBoardDTO.getFreeFilepath())
 				.member(freeBoardDTO.getMember())
 				.build();
-		return freeBoard;
 	}
 
-	// update
 	public static FreeBoard toUpdateEntity(FreeBoardDTO freeBoardDTO) {
-		FreeBoard freeBoard = FreeBoard.builder()
+		return FreeBoard.builder()
 				.fbid(freeBoardDTO.getFbid())
 				.fbtitle(freeBoardDTO.getFbtitle())
 				.fbcontent(freeBoardDTO.getFbcontent())
@@ -85,7 +80,5 @@ public class FreeBoard extends BaseEntity {
 				.freeFilepath(freeBoardDTO.getFreeFilepath())
 				.member(freeBoardDTO.getMember())
 				.build();
-		return freeBoard;
 	}
-
 }

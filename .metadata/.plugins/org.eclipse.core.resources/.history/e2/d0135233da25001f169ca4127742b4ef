@@ -1,0 +1,33 @@
+package com.manbo.homepage.service;
+
+import com.manbo.homepage.entity.TrailLike;
+import com.manbo.homepage.repository.TrailLikeRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@Service
+public class TrailLikeService {
+
+    @Autowired
+    private TrailLikeRepository trailLikeRepository;
+
+    public void toggleLike(Long memberId, Long trailId) {
+        Optional<TrailLike> existingLike = trailLikeRepository.findByMemberIdAndTrailId(memberId, trailId);
+
+        if (existingLike.isPresent()) {
+            trailLikeRepository.delete(existingLike.get());
+        } else {
+            TrailLike trailLike = TrailLike.builder()
+                    .member(Member.builder().id(memberId).build())
+                    .trail(Trail.builder().trailId(trailId).build())
+                    .build();
+            trailLikeRepository.save(trailLike);
+        }
+    }
+
+    public boolean isLiked(Long memberId, Long trailId) {
+        return trailLikeRepository.findByMemberIdAndTrailId(memberId, trailId).isPresent();
+    }
+}
