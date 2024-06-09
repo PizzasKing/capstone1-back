@@ -32,9 +32,7 @@ public class TrailController {
     // 산책로 등록
     @PostMapping
     public ResponseEntity<TrailDTO> createTrail(@RequestBody TrailDTO trailDTO)  throws IOException, Exception  {
-    	System.out.println(trailDTO.getMember().getMid());
         Member member = memberService.findByMidtoMember(trailDTO.getMember().getMid());
-        System.out.println(member);
         trailDTO.setMember(member);
         TrailDTO savedTrail = trailService.saveTrail(trailDTO);
         return new ResponseEntity<>(savedTrail, HttpStatus.CREATED);

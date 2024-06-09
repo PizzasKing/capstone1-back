@@ -17,13 +17,16 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Route extends BaseEntity {
 
-	@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "time_idx")
     private Long timeIDX;
-    
+
+	@Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "route_id")
     private Long routeId;
+    
+    @Column(name = "tid")
+    private Long trailId;
 
 
     @Column(nullable = false) // 위도
@@ -34,7 +37,8 @@ public class Route extends BaseEntity {
 
     public static Route toSaveEntity(RouteDTO routeDTO) {
         return Route.builder()
-                .routeId(routeDTO.getRouteId())
+                .timeIDX(routeDTO.getTimeIDX())
+                .trailId(routeDTO.getTrailId())
                 .latitude(routeDTO.getLatitude())
                 .longitude(routeDTO.getLongitude())
                 .build();
@@ -44,6 +48,7 @@ public class Route extends BaseEntity {
         return Route.builder()
                 .routeId(routeDTO.getRouteId())
                 .timeIDX(routeDTO.getTimeIDX())
+                .trailId(routeDTO.getTrailId())
                 .latitude(routeDTO.getLatitude())
                 .longitude(routeDTO.getLongitude())
                 .build();

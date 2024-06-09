@@ -28,6 +28,11 @@ public class TrailService {
         Trail trail = trailRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Trail not found"));
         return TrailDTO.toEntity(trail);
     }
+    // 산책로 상세 조회
+    public Trail getTrailDirect(Long id) {
+        Trail trail = trailRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Trail not found"));
+        return trail;
+    }
 
     // 산책로 목록 조회
     public List<TrailDTO> getAllTrails() {

@@ -14,6 +14,7 @@ public class RouteDTO {
 
     private Long routeId;
     private Long timeIDX;
+    private Long trailId;
     private double latitude;
     private double longitude;
 
@@ -21,16 +22,28 @@ public class RouteDTO {
         return RouteDTO.builder()
                 .routeId(route.getRouteId())
                 .timeIDX(route.getTimeIDX())
+                .trailId(route.getTrailId())
                 .latitude(route.getLatitude())
                 .longitude(route.getLongitude())
                 .build();
     }
-    public static RouteDTO toEntity(Route route) {
+    public static RouteDTO fromEntity(Route route) {
     	return RouteDTO.builder()
     			.routeId(route.getRouteId())
     			.timeIDX(route.getTimeIDX())
+                .trailId(route.getTrailId())
     			.latitude(route.getLatitude())
     			.longitude(route.getLongitude())
     			.build();
+    }
+    // DTO -> Entity
+    public static Route toEntity(RouteDTO routeDTO) {
+        return Route.builder()
+                .routeId(routeDTO.getRouteId())
+                .timeIDX(routeDTO.getTimeIDX())
+                .trailId(routeDTO.getTrailId())
+                .latitude(routeDTO.getLatitude())
+                .longitude(routeDTO.getLongitude())
+                .build();
     }
 }
