@@ -1,5 +1,6 @@
 package com.manbo.homepage.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,19 +15,27 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.manbo.homepage.dto.MemberDTO;
 import com.manbo.homepage.dto.TrailDTO;
+import com.manbo.homepage.entity.Member;
+import com.manbo.homepage.service.MemberService;
 import com.manbo.homepage.service.TrailService;
 
 @RestController
 @RequestMapping("/api/trails")
 public class TrailController {
-
     @Autowired
     private TrailService trailService;
+    @Autowired
+    private MemberService memberService;
 
     // 산책로 등록
     @PostMapping
-    public ResponseEntity<TrailDTO> createTrail(@RequestBody TrailDTO trailDTO) {
+    public ResponseEntity<TrailDTO> createTrail(@RequestBody TrailDTO trailDTO)  throws IOException, Exception  {
+    	System.out.println(trailDTO.getMember().getMid());
+        Member member = memberService.findByMidtoMember(trailDTO.getMember().getMid());
+        System.out.println(member);
+        trailDTO.setMember(member);
         TrailDTO savedTrail = trailService.saveTrail(trailDTO);
         return new ResponseEntity<>(savedTrail, HttpStatus.CREATED);
     }

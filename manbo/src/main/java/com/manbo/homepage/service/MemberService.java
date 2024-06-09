@@ -119,10 +119,16 @@ public class MemberService {
 		Page<Member> memberPage = memberRepository.findAll(pageable);
 		return memberPage.map(member -> MemberDTO.toSaveDTO(member));
 	}
-	
+
     public MemberDTO findByMidDirect(String username) {
         Optional<Member> member = memberRepository.findByMid(username);
         return member.map(MemberDTO::toSaveDTO)
                      .orElseThrow(() -> new IllegalArgumentException("Member not found with mid: " + username));
+    }
+    public Member findByMidtoMember(String username) {
+        Optional<Member> member = memberRepository.findByMid(username);
+        System.out.println(member);
+        return member
+                .orElseThrow(() -> new IllegalArgumentException("Member not found with mid: " + username));
     }
 }
