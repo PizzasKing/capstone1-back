@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.manbo.homepage.dto.FreeBoardDTO;
+import com.manbo.homepage.dto.MemberDTO;
 import com.manbo.homepage.entity.FreeBoard;
 import com.manbo.homepage.entity.Member;
 import com.manbo.homepage.repository.FreeBoardRepository;
@@ -27,22 +28,26 @@ import lombok.RequiredArgsConstructor;
 public class FreeBoardService {
 	private final FreeBoardRepository freeBoardRepository;
 
-	public void save(FreeBoard freeBoard, MultipartFile freeBoardFile) throws Exception, IOException {
-		if (!freeBoardFile.isEmpty()) {
-			UUID uuid = UUID.randomUUID();
-			String freeFilename = uuid + "_" + freeBoardFile.getOriginalFilename();
-			String freeFilepath = "C:/projectfiles/" + freeFilename;
-			// String freeFilepath = "/Users/Healer/springfiles/" + freeFilename; //희린 전용
+    public void save(FreeBoardDTO freeBoardDTO, MemberDTO memberDTO, MultipartFile freeBoardFile) throws Exception, IOException {
 
-			File savedFreeFile = new File(freeFilepath); // 실제 저장된 파일
-			freeBoardFile.transferTo(savedFreeFile);
+        Member member = MemberDTO.toEntity(memberDTO);
+    	freeBoardDTO.setMember(member);
+        FreeBoard freeBoard = FreeBoardDTO.toEntity(freeBoardDTO);
 
-			freeBoard.setFreeFilename(freeFilename);
-			freeBoard.setFreeFilepath(freeFilepath); // 파일 경로 설정
-		}
+        if (freeBoardFile != null && !freeBoardFile.isEmpty()) {
+            UUID uuid = UUID.randomUUID();
+            String freeFilename = uuid + "_" + freeBoardFile.getOriginalFilename();
+            String freeFilepath = "C:/projectfiles/" + freeFilename;
 
-		freeBoardRepository.save(freeBoard);
-	}
+            File savedFreeFile = new File(freeFilepath);
+            freeBoardFile.transferTo(savedFreeFile);
+
+            freeBoard.setFreeFilename(freeFilename);
+            freeBoard.setFreeFilepath(freeFilepath);
+        }
+
+        freeBoardRepository.save(freeBoard);
+    }
 
 	public List<FreeBoardDTO> findAll() {
 		List<FreeBoard> freeBoardList = freeBoardRepository.findAll(Sort.by(Sort.Direction.DESC, "fbid"));
