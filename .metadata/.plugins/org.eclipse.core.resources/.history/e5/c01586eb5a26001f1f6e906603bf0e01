@@ -1,0 +1,49 @@
+package com.manbo.homepage.service;
+
+import com.manbo.homepage.dto.RecommendBoardDTO;
+import com.manbo.homepage.entity.RecommendBoard;
+import com.manbo.homepage.repository.RecommendBoardRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@RequiredArgsConstructor
+public class RecommendBoardService {
+
+    private final RecommendBoardRepository recommendBoardRepository;
+
+    @Transactional(readOnly = true)
+    public Page<RecommendBoardDTO> getRecommendBoardList(Pageable pageable) {
+        Page<RecommendBoard> recommendBoardPage = recommendBoardRepository.findAll(pageable);
+        return recommendBoardPage.map(RecommendBoardDTO::fromEntity);
+    }
+
+    @Transactional(readOnly = true)
+    public RecommendBoardDTO getRecommendBoardDetail(Long id) {
+        RecommendBoard recommendBoard = recommendBoardRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid recommend board id: " + id));
+        return RecommendBoardDTO.fromEntity(recommendBoard);
+    }
+
+    @Transactional
+    public void saveRecommendBoard(RecommendBoardDTO recommendBoardDTO) {
+        RecommendBoard recommendBoard = RecommendBoard.fromDTO(recommendBoardDTO);
+        recommendBoardRepository.save(recommendBoard);
+    }
+
+    @Transactional
+    public void updateRecommendBoard(RecommendBoardDTO recommendBoardDTO) {
+        RecommendBoard recommendBoard = recommendBoardRepository.findById(recommendBoardDTO.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid recommend board id: " + recommendBoardDTO.getId()));
+        recommendBoard.update(recommendBoardDTO);
+        recommendBoardRepository.save(recommendBoard);
+    }
+
+    @Transactional
+    public void deleteRecommendBoard(Long id) {
+        recommendBoardRepository.deleteById(id);
+    }
+}

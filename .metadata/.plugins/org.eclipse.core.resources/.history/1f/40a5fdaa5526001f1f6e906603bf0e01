@@ -1,0 +1,40 @@
+package com.manbo.homepage.service;
+
+import com.manbo.homepage.dto.RouteDTO;
+import com.manbo.homepage.entity.Route;
+import com.manbo.homepage.repository.RouteRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+@RequiredArgsConstructor
+public class RouteService {
+
+    private final RouteRepository routeRepository;
+
+    @Transactional
+    public List<RouteDTO> saveRoutes(List<RouteDTO> routeDTOs) {
+        List<Route> routes = routeDTOs.stream()
+                .map(Route::toSaveEntity)
+                .collect(Collectors.toList());
+        List<Route> savedRoutes = routeRepository.saveAll(routes);
+        return savedRoutes.stream()
+                .map(RouteDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public List<RouteDTO> updateRoutes(List<RouteDTO> routeDTOs) {
+        List<Route> routes = routeDTOs.stream()
+                .map(Route::toUpdateEntity)
+                .collect(Collectors.toList());
+        List<Route> updatedRoutes = routeRepository.saveAll(routes);
+        return updatedRoutes.stream()
+                .map(RouteDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
+}

@@ -1,55 +1,54 @@
 package com.manbo.homepage.service;
 
-import com.manbo.homepage.dto.MemberDTO;
 import com.manbo.homepage.dto.RouteDTO;
-import com.manbo.homepage.entity.Member;
 import com.manbo.homepage.entity.Route;
-import com.manbo.homepage.entity.Trail;
 import com.manbo.homepage.repository.RouteRepository;
-import com.manbo.homepage.repository.TrailRepository;
-
-import jakarta.persistence.EntityNotFoundException;
-
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class RouteService {
 
     private final RouteRepository routeRepository;
 
-    @Autowired
-    public RouteService(RouteRepository routeRepository) {
-        this.routeRepository = routeRepository;
+    @Transactional(readOnly = true)
+    public List<RouteDTO> getAllRoutes() {
+        List<Route> routes = routeRepository.findAll();
+        return routes.stream()
+                .map(RouteDTO::toEntity)
+                .collect(Collectors.toList());
     }
 
-    public void save(RouteDTO routeDTO) {
+    @Transactional(readOnly = true)
+    public RouteDTO getRouteById(Long routeId) {
+        Route route = routeRepository.findById(routeId)
+                .orElseThrow(() -> new IllegalArgumentException("Route not found with id: " + routeId));
+        return RouteDTO.toEntity(route);
+    }
+
+    @Transactional
+    public RouteDTO createRoute(RouteDTO routeDTO) {
         Route route = Route.toSaveEntity(routeDTO);
-        routeRepository.save(route);
+        Route savedRoute = routeRepository.save(route);
+        return RouteDTO.toEntity(savedRoute);
     }
 
-    public RouteDTO update(Long routeId, RouteDTO routeDTO) {
+    @Transactional
+    public RouteDTO updateRoute(Long routeId, RouteDTO routeDTO) {
         Route route = routeRepository.findById(routeId)
-                .orElseThrow(() -> new EntityNotFoundException("Route not found with id: " + routeId));
-
-        // RouteDTO를 이용하여 Route 엔티티 업데이트
-
-        return RouteDTO.toSaveDTO(route);
+                .orElseThrow(() -> new IllegalArgumentException("Route not found with id: " + routeId));
+        Route updatedRoute = Route.toUpdateEntity(routeDTO);
+        Route savedRoute = routeRepository.save(updatedRoute);
+        return RouteDTO.toEntity(savedRoute);
     }
 
+    @Transactional
     public void deleteRoute(Long routeId) {
-        Route route = routeRepository.findById(routeId)
-                .orElseThrow(() -> new EntityNotFoundException("Route not found with id: " + routeId));
-
-        routeRepository.delete(route);
-    }
-
-	public RouteDTO findByRouteIdDirect(String routeId) {
-		Optional<Route> route = routeRepository.findByRouteId(routeId);
-        return route.map(RouteDTO::toSaveDTO)
-                     .orElseThrow(() -> new IllegalArgumentException("Member not found with mid: " + routeId));
+        routeRepository.deleteById(routeId);
     }
 }
-

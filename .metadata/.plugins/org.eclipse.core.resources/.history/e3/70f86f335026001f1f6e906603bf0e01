@@ -1,0 +1,28 @@
+package com.manbo.homepage.service;
+
+import com.manbo.homepage.dto.RouteDTO;
+import com.manbo.homepage.entity.Route;
+import com.manbo.homepage.repository.RouteRepository;
+
+import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@Transactional
+public class RouteService {
+
+    private final RouteRepository routeRepository;
+
+    @Autowired
+    public RouteService(RouteRepository routeRepository) {
+        this.routeRepository = routeRepository;
+    }
+
+    public RouteDTO findByRouteIdDirect(Long routeId) {
+        Route route = routeRepository.findById(routeId)
+                .orElseThrow(() -> new EntityNotFoundException("Route not found with id: " + routeId));
+        return RouteDTO.fromEntity(route);
+    }
+}

@@ -18,21 +18,19 @@ public class RouteDTO {
     private double longitude;
 
     public static RouteDTO toSaveDTO(Route route) {
-        RouteDTO routeDTO = RouteDTO.builder()
+        return RouteDTO.builder()
                 .routeId(route.getRouteId())
                 .timeIDX(route.getTimeIDX())
                 .latitude(route.getLatitude())
                 .longitude(route.getLongitude())
                 .build();
-        return routeDTO;
     }
     public static RouteDTO toEntity(Route route) {
-        RouteDTO routeDTO = RouteDTO.builder()
-                .routeId(route.getRouteId())
-                .timeIDX(route.getTimeIDX())
-                .latitude(route.getLatitude())
-                .longitude(route.getLongitude())
-                .build();
-        return routeDTO;
+    	return RouteDTO.builder()
+    			.routeId(route.getRouteId())
+    			.timeIDX(route.getTimeIDX())
+    			.latitude(route.getLatitude())
+    			.longitude(route.getLongitude())
+    			.build();
     }
 }

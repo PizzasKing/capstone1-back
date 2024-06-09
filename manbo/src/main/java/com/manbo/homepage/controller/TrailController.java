@@ -1,75 +1,61 @@
 package com.manbo.homepage.controller;
 
-import com.manbo.homepage.config.SecurityUser;
-import com.manbo.homepage.dto.TrailDTO;
-import com.manbo.homepage.dto.MemberDTO;
-import com.manbo.homepage.dto.RouteDTO;
-import com.manbo.homepage.dto.TrailDTO;
-import com.manbo.homepage.entity.FreeBoard;
-import com.manbo.homepage.service.FreeBoardService;
-import com.manbo.homepage.service.MemberService;
-import com.manbo.homepage.service.RouteService;
-import com.manbo.homepage.service.TrailService;
-
-import lombok.RequiredArgsConstructor;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.manbo.homepage.dto.TrailDTO;
+import com.manbo.homepage.service.TrailService;
+
 @RestController
-@RequiredArgsConstructor
-@RequestMapping("/api/trail")
+@RequestMapping("/api/trails")
 public class TrailController {
-	private final TrailService trailService;
-	private final RouteService routeService;
 
-	@GetMapping("/list")
-	public Page<TrailDTO> pagelist(@RequestParam(value = "page", defaultValue = "0") int page,
-			@RequestParam(value = "size", defaultValue = "10") int size,
-			@RequestParam(value = "searchOption", required = false) String searchOption,
-			@RequestParam(value = "keyword", required = false) String keyword,
-			@AuthenticationPrincipal SecurityUser principal) {
+    @Autowired
+    private TrailService trailService;
 
-		Pageable pageable = PageRequest.of(page, size);
+    // 산책로 등록
+    @PostMapping
+    public ResponseEntity<TrailDTO> createTrail(@RequestBody TrailDTO trailDTO) {
+        TrailDTO savedTrail = trailService.saveTrail(trailDTO);
+        return new ResponseEntity<>(savedTrail, HttpStatus.CREATED);
+    }
 
-		Page<TrailDTO> trailPage;
+    // 산책로 상세 조회
+    @GetMapping("/{id}")
+    public ResponseEntity<TrailDTO> getTrail(@PathVariable Long id) {
+        TrailDTO trail = trailService.getTrail(id);
+        return new ResponseEntity<>(trail, HttpStatus.OK);
+    }
 
-		trailPage = trailService.paging(pageable);
+    // 산책로 목록 조회
+    @GetMapping("/list")
+    public ResponseEntity<List<TrailDTO>> getAllTrails() {
+        List<TrailDTO> trails = trailService.getAllTrails();
+        return new ResponseEntity<>(trails, HttpStatus.OK);
+    }
 
-		return trailPage;
-	}
+    // 산책로 수정
+    @PutMapping("/{id}")
+    public ResponseEntity<TrailDTO> updateTrail(@PathVariable Long id, @RequestBody TrailDTO trailDTO) {
+        TrailDTO updatedTrail = trailService.updateTrail(id, trailDTO);
+        return new ResponseEntity<>(updatedTrail, HttpStatus.OK);
+    }
 
-	@GetMapping("/{trailId}")
-	public TrailDTO getDetail(@PathVariable Long trailId) {
-		return trailService.findById(trailId);
-	}
-
-//	@PostMapping("/register")
-//	public void write(@RequestBody TrailDTO trailDTO,
-//			@RequestParam(value = "routeFile", required = false) MultipartFile routeFile)
-//			throws IOException, Exception {
-//		RouteDTO routeDTO = routeService.findByRouteIdDirect(trailDTO.getRouteId());
-//		trailService.save(trailDTO, routeDTO, routeFile);
-//	}
-
-	@PutMapping("/update/{trailId}")
-	public TrailDTO update(@PathVariable Long trailId, @RequestBody TrailDTO trailDTO,
-			@RequestParam(value = "routeFile", required = false) MultipartFile routeFile)
-			throws IOException, Exception {
-		return trailService.update(trailId, trailDTO, routeFile);
-	}
-
-	@DeleteMapping("/delete/{trailId}")
-	public void deleteTrail(@PathVariable Long trailId) {
-		trailService.deleteTrail(trailId);
-	}
+    // 산책로 삭제
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTrail(@PathVariable Long id) {
+        trailService.deleteTrail(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

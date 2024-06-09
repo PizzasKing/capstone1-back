@@ -19,6 +19,7 @@ public class TrailDTO {
 
     private Long trailId; // 산책로 ID
     private Member member;
+    private Route routeID;
     private String startLocation; // 시작 위치
     private String trailName; // 산책로 이름
     private int usageCount; // 산책로 이용 횟수
@@ -46,6 +47,7 @@ public class TrailDTO {
                 .createdDate(trail.getCreatedDate())
                 .updatedDate(trail.getUpdatedDate())
                 .endDate(trail.getEndDate())
+                .routeID(trail.getRouteId())
                 .build();
         
         return trailDTO;
@@ -57,8 +59,11 @@ public class TrailDTO {
     			.startLocation(trail.getStartLocation())
     			.trailName(trail.getTrailName())
     			.usageCount(trail.getUsageCount())
+    			.distance(trail.getDistance())
+                .regstate(trail.isRegstate())
+                .refId(trail.getRefId())
     			.rating(trail.getRating())
-    			
+    			.routeID(trail.getRouteId())
     			.build();
     	
     	return trailDTO;

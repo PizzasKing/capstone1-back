@@ -49,9 +49,14 @@ public class Trail extends BaseEntity {
 
 	// 작성자 - 외래키
 	@JsonIgnore
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name = "mid")
 	private Member member;
+	
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "route_id")
+	private Route routeId;
 	
 
 	// insert
@@ -66,6 +71,7 @@ public class Trail extends BaseEntity {
 				.refId(trailDTO.getRefId())
 				.endDate(trailDTO.getEndDate())
 				.member(trailDTO.getMember())
+				.routeId(trailDTO.getRouteID())
 				.build();
 		return trail;
 	}

@@ -1,0 +1,49 @@
+package com.manbo.homepage.controller;
+
+import com.manbo.homepage.dto.RecommendBoardDTO;
+import com.manbo.homepage.service.RecommendBoardService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/recommend-board")
+@RequiredArgsConstructor
+public class RecommendBoardController {
+
+    private final RecommendBoardService recommendBoardService;
+
+    @GetMapping
+    public ResponseEntity<Page<RecommendBoardDTO>> getRecommendBoardList(Pageable pageable) {
+        Page<RecommendBoardDTO> recommendBoardPage = recommendBoardService.getRecommendBoardList(pageable);
+        return ResponseEntity.ok(recommendBoardPage);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<RecommendBoardDTO> getRecommendBoardDetail(@PathVariable Long id) {
+        RecommendBoardDTO recommendBoardDTO = recommendBoardService.getRecommendBoardDetail(id);
+        return ResponseEntity.ok(recommendBoardDTO);
+    }
+
+    @PostMapping
+    public ResponseEntity<Void> saveRecommendBoard(@RequestBody RecommendBoardDTO recommendBoardDTO) {
+        recommendBoardService.saveRecommendBoard(recommendBoardDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateRecommendBoard(@PathVariable Long id, @RequestBody RecommendBoardDTO recommendBoardDTO) {
+        recommendBoardDTO.setId(id);
+        recommendBoardService.updateRecommendBoard(recommendBoardDTO);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteRecommendBoard(@PathVariable Long id) {
+        recommendBoardService.deleteRecommendBoard(id);
+        return ResponseEntity.noContent().build();
+    }
+}

@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.manbo.homepage.dto.RouteDTO;
 import jakarta.persistence.*;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,13 +17,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Route extends BaseEntity {
 
-    @Id
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "time_idx")
+    private Long timeIDX;
+    
     @Column(name = "route_id")
     private Long routeId;
 
-    @Column(name = "time_idx")
-    private Long timeIDX;
 
     @Column(nullable = false) // 위도
     private double latitude;
@@ -33,21 +33,19 @@ public class Route extends BaseEntity {
     private double longitude;
 
     public static Route toSaveEntity(RouteDTO routeDTO) {
-    	Route route = Route.builder()
-    			.timeIDX(routeDTO.getTimeIDX())
-    			.latitude(routeDTO.getLatitude())
-    			.longitude(routeDTO.getLongitude())
-    			.build();
-    	return route;
+        return Route.builder()
+                .routeId(routeDTO.getRouteId())
+                .latitude(routeDTO.getLatitude())
+                .longitude(routeDTO.getLongitude())
+                .build();
     }
+
     public static Route toUpdateEntity(RouteDTO routeDTO) {
-    	Route route = Route.builder()
-    			.routeId(routeDTO.getRouteId())
-    			.timeIDX(routeDTO.getTimeIDX())
-    			.latitude(routeDTO.getLatitude())
-    			.longitude(routeDTO.getLongitude())
-    			.build();
-    	return route;
+        return Route.builder()
+                .routeId(routeDTO.getRouteId())
+                .timeIDX(routeDTO.getTimeIDX())
+                .latitude(routeDTO.getLatitude())
+                .longitude(routeDTO.getLongitude())
+                .build();
     }
 }
-

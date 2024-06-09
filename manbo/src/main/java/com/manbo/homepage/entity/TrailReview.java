@@ -31,12 +31,12 @@ public class TrailReview extends BaseEntity {
     private String reviewContent;
     
     @JsonIgnore
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name="trail_id")
 	private Trail trail;
 
     @JsonIgnore
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name="member_id")
 	private Member member;
     

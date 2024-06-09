@@ -1,0 +1,49 @@
+package com.manbo.homepage.service;
+
+import com.manbo.homepage.dto.RecommendDTO;
+import com.manbo.homepage.entity.Recommend;
+import com.manbo.homepage.repository.RecommendRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+@Service
+@RequiredArgsConstructor
+public class RecommendBoardService {
+
+    private final RecommendRepository recommendRepository;
+
+    @Transactional(readOnly = true)
+    public Page<RecommendDTO> getRecommendList(Pageable pageable) {
+        Page<Recommend> recommendPage = recommendRepository.findAll(pageable);
+        return recommendPage.map(RecommendDTO::fromEntity);
+    }
+
+    @Transactional(readOnly = true)
+    public RecommendDTO getRecommendDetail(Long id) {
+        Recommend recommend = recommendRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid recommend id: " + id));
+        return RecommendDTO.fromEntity(recommend);
+    }
+
+    @Transactional
+    public void saveRecommend(RecommendDTO recommendDTO) {
+        Recommend recommend = Recommend.fromDTO(recommendDTO);
+        recommendRepository.save(recommend);
+    }
+
+    @Transactional
+    public void updateRecommend(RecommendDTO recommendDTO) {
+        Recommend recommend = recommendRepository.findById(recommendDTO.getId())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid recommend id: " + recommendDTO.getId()));
+        recommend.update(recommendDTO);
+        recommendRepository.save(recommend);
+    }
+
+    @Transactional
+    public void deleteRecommend(Long id) {
+        recommendRepository.deleteById(id);
+    }
+}
