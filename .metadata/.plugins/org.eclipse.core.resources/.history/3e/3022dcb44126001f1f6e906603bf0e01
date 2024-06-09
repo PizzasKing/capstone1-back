@@ -1,0 +1,86 @@
+package com.manbo.homepage.controller;
+
+import com.manbo.homepage.config.SecurityUser;
+import com.manbo.homepage.dto.TrailDTO;
+import com.manbo.homepage.dto.MemberDTO;
+import com.manbo.homepage.dto.TrailDTO;
+import com.manbo.homepage.entity.FreeBoard;
+import com.manbo.homepage.service.FreeBoardService;
+import com.manbo.homepage.service.MemberService;
+import com.manbo.homepage.service.RouteService;
+import com.manbo.homepage.service.TrailService;
+
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/trail")
+public class TrailController {
+	private final TrailService trailService;
+	private final RouteService routeService;
+	
+	@GetMapping("/list")
+	public Page<TrailDTO> pagelist(
+			@RequestParam(value = "page", defaultValue = "0") int page,
+			@RequestParam(value = "size", defaultValue = "10") int size,
+			@RequestParam(value = "searchOption", required = false) String searchOption,
+			@RequestParam(value = "keyword", required = false) String keyword,
+			@AuthenticationPrincipal SecurityUser principal) {
+
+		Pageable pageable = PageRequest.of(page, size);
+
+		Page<TrailDTO> trailPage;
+
+		if (searchOption != null && keyword != null) {
+			if ("title".equals(searchOption)) {
+				trailPage = trailService.searchByTitle(keyword, pageable);
+			} 
+		} else {
+			trailPage = trailService.paging(pageable);
+		}
+
+		return trailPage;
+	}
+
+	@GetMapping("/{fbid}")
+	public TrailDTO getDetail(@PathVariable Long fbid) {
+		return trailService.findById(fbid);
+	}
+
+    @PostMapping("/write")
+    public void write(@RequestBody TrailDTO freeBoardDTO,
+                      @RequestParam(value = "freeBoardFile", required = false) MultipartFile freeBoardFile) throws IOException, Exception {
+        MemberDTO memberDTO = memberService.findByMidDirect(freeBoardDTO.getMember().getMid());
+        trailService.save(freeBoardDTO, memberDTO, freeBoardFile);
+    }
+
+	@PutMapping("/update/{fbid}")
+	public TrailDTO update(@PathVariable Long fbid, @RequestBody TrailDTO freeBoardDTO,
+			@RequestParam("freeBoardFile") MultipartFile freeBoardFile, @AuthenticationPrincipal SecurityUser principal) throws IOException, Exception {
+		FreeBoard freeBoard = FreeBoard.toUpdateEntity(freeBoardDTO);
+		freeBoard.setMember(principal.getMember()); // 설정된 인증된 사용자로 member 설정
+		return trailService.update(freeBoardDTO, freeBoardFile);
+	}
+
+	@DeleteMapping("/delete/{fbid}")
+	public void deleteFreeBoard(@PathVariable Long fbid) {
+		trailService.deleteById(fbid);
+	}
+
+	@GetMapping("/main")
+	public List<FreeBoard> mainList() {
+		return trailService.mainList();
+	}
+}

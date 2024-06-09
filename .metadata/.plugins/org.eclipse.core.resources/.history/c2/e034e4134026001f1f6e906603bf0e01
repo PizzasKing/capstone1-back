@@ -1,0 +1,29 @@
+package com.manbo.homepage.dto;
+
+import com.manbo.homepage.entity.Route;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class RouteDTO {
+
+    private Long routeId;
+    private Long timeIDX;
+    private double latitude;
+    private double longitude;
+
+    public static RouteDTO toSaveDTO(Route route) {
+        RouteDTO routeDTO = RouteDTO.builder()
+                .routeId(route.getRouteId())
+                .timeIDX(route.getTimeIDX())
+                .latitude(route.getLatitude())
+                .longitude(route.getLongitude())
+                .build();
+        return routeDTO;
+    }
+}

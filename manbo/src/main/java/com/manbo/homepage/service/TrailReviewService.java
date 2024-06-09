@@ -27,14 +27,9 @@ public class TrailReviewService {
     public TrailReviewDTO addReview(TrailReviewDTO reviewDTO) {
         TrailReview review = TrailReview.toSaveEntity(reviewDTO);
         review = trailReviewRepository.save(review);
-        // 트레일 평점 업데이트 로직 추가
-        updateTrailRating(review.getTrail().getTrailId());
+        
         return TrailReviewDTO.toSaveDTO(review);
     }
 
-    // 트레일 평점 업데이트 메서드
-    private void updateTrailRating(Long trailId) {
-        double averageRating = trailReviewRepository.findAverageRatingByTrailId(trailId);
-        trailService.updateTrailRating(trailId, averageRating);
-    }
+  
 }

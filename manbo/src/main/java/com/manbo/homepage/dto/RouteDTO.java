@@ -16,17 +16,23 @@ public class RouteDTO {
     private Long timeIDX;
     private double latitude;
     private double longitude;
-    private double altitude;
-    private Long trailId; // Trail 엔티티의 ID를 직접 참조
 
     public static RouteDTO toSaveDTO(Route route) {
-        return RouteDTO.builder()
+        RouteDTO routeDTO = RouteDTO.builder()
                 .routeId(route.getRouteId())
                 .timeIDX(route.getTimeIDX())
                 .latitude(route.getLatitude())
                 .longitude(route.getLongitude())
-                .altitude(route.getAltitude())
-                .trailId(route.getTrail().getTrailId())
                 .build();
+        return routeDTO;
+    }
+    public static RouteDTO toEntity(Route route) {
+        RouteDTO routeDTO = RouteDTO.builder()
+                .routeId(route.getRouteId())
+                .timeIDX(route.getTimeIDX())
+                .latitude(route.getLatitude())
+                .longitude(route.getLongitude())
+                .build();
+        return routeDTO;
     }
 }
