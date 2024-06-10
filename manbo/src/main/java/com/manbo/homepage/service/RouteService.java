@@ -4,7 +4,12 @@ import com.manbo.homepage.dto.RouteDTO;
 import com.manbo.homepage.entity.Route;
 import com.manbo.homepage.repository.RouteRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -12,8 +17,10 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@RequiredArgsConstructor
 public class RouteService {
 
+    private final RouteRepository routeRepository;
     private final RouteRepository routeRepository;
 
     @Transactional(readOnly = true)

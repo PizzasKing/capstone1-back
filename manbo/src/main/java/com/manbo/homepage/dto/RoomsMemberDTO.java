@@ -11,20 +11,29 @@ import java.util.stream.Collectors;
 @Builder
 public class RoomsMemberDTO {
 
-    private Long roomMemberId;
+    private Long rmid;
     private Long roomId;
     private Long memberId;
     private String role;
 
     public static List<RoomsMemberDTO> toDTOList(List<RoomsMember> roomsMembers) {
         return roomsMembers.stream()
-                .map(RoomsMemberDTO::toDTO)
+                .map(RoomsMemberDTO::toSaveDTO)
                 .collect(Collectors.toList());
     }
 
-    public static RoomsMemberDTO toDTO(RoomsMember roomsMember) {
+    public static RoomsMemberDTO toSaveDTO(RoomsMember roomsMember) {
         return RoomsMemberDTO.builder()
-                .roomMemberId(roomsMember.getRoomMemberId())
+                .rmid(roomsMember.getRmid())
+                .roomId(roomsMember.getRoom().getRoomId())
+                .memberId(roomsMember.getMember().getMemberId())
+                .role(roomsMember.getRole().toString())
+                .build();
+    }
+
+    public static RoomsMemberDTO toEntity(RoomsMember roomsMember) {
+        return RoomsMemberDTO.builder()
+                .rmid(roomsMember.getRmid())
                 .roomId(roomsMember.getRoom().getRoomId())
                 .memberId(roomsMember.getMember().getMemberId())
                 .role(roomsMember.getRole().toString())

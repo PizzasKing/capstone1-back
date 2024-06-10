@@ -1,8 +1,0 @@
-{\rtf1}
-# Ignore application.properties
-src/main/resources/application.properties
-
-# Ignore all properties files
-*.properties
-
-.metadata/.log

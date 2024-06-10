@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 
 import com.manbo.homepage.entity.Member;
 import com.manbo.homepage.entity.Route;
+import com.manbo.homepage.entity.Route;
 import com.manbo.homepage.entity.Trail;
 
 @Data
@@ -20,6 +21,7 @@ public class TrailDTO {
     private Long trailId; // 산책로 ID
     private Member member;
     private Route routeID;
+    private Route routeID;
     private String startLocation; // 시작 위치
     private String trailName; // 산책로 이름
     private int usageCount; // 산책로 이용 횟수
@@ -29,6 +31,8 @@ public class TrailDTO {
     private boolean isReviewed; // 리뷰 여부
     private Integer refId; //참조id
     private Timestamp createdDate;
+    private Timestamp updatedDate;
+    private Timestamp endDate;
     private Timestamp updatedDate;
     private Timestamp endDate;
     private String trailRoutePath; // 산책로 경로 파일 경로

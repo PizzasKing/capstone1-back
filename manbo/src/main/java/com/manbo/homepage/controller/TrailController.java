@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +23,7 @@ import com.manbo.homepage.service.MemberService;
 import com.manbo.homepage.service.TrailService;
 
 @RestController
+@RequestMapping("/api/trails")
 @RequestMapping("/api/trails")
 public class TrailController {
     @Autowired
@@ -47,7 +49,11 @@ public class TrailController {
 
     // 산책로 목록 조회
     @GetMapping("/list")
+    // 산책로 목록 조회
+    @GetMapping("/list")
     public ResponseEntity<List<TrailDTO>> getAllTrails() {
+        List<TrailDTO> trails = trailService.getAllTrails();
+        return new ResponseEntity<>(trails, HttpStatus.OK);
         List<TrailDTO> trails = trailService.getAllTrails();
         return new ResponseEntity<>(trails, HttpStatus.OK);
     }

@@ -16,29 +16,43 @@ import java.util.stream.Collectors;
 public class RoomsDTO {
 
     private Long roomId;
-    private Member member; // 방 생성자 ID
-    private Trail trailId; // 산책로 ID
-    private String title;
-    private String description;
-    private int maxMembers;
+    private Member member;
+    private Trail trail;
+    private String roomTitle;
+    private String roomContent;
+    private Integer maxMembers;
     private LocalDateTime meetingTime;
     private String status;
 
-    public static RoomsDTO toDTO(Rooms rooms) {
+    public static RoomsDTO toSaveDTO(Rooms rooms) {
         return RoomsDTO.builder()
                 .roomId(rooms.getRoomId())
                 .member(rooms.getMember())
-                .trailId(rooms.getTrailId())
-                .title(rooms.getTitle())
-                .description(rooms.getDescription())
+                .trail(rooms.getTrail())
+                .roomTitle(rooms.getRoomTitle())
+                .roomContent(rooms.getRoomContent())
                 .maxMembers(rooms.getMaxMembers())
                 .meetingTime(rooms.getMeetingTime())
                 .status(rooms.getStatus())
                 .build();
     }
+
+    public static RoomsDTO toEntity(Rooms rooms) {
+        return RoomsDTO.builder()
+                .roomId(rooms.getRoomId())
+                .member(rooms.getMember())
+                .trail(rooms.getTrail())
+                .roomTitle(rooms.getRoomTitle())
+                .roomContent(rooms.getRoomContent())
+                .maxMembers(rooms.getMaxMembers())
+                .meetingTime(rooms.getMeetingTime())
+                .status(rooms.getStatus())
+                .build();
+    }
+
     public static List<RoomsDTO> toDTOList(List<Rooms> rooms) {
         return rooms.stream()
-                .map(RoomsDTO::toDTO)
+                .map(RoomsDTO::toSaveDTO)
                 .collect(Collectors.toList());
     }
 }
