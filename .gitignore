@@ -4,3 +4,5 @@ src/main/resources/application.properties
 
 # Ignore all properties files
 *.properties
+
+.metadata/.log
