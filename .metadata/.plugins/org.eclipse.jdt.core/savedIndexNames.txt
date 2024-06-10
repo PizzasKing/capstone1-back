@@ -76,7 +76,6 @@ INDEX VERSION 1.134+C:\manbo\.metadata\.plugins\org.eclipse.jdt.core
 3412365814.index
 3931620342.index
 2339711077.index
-3761887603.index
 3533403199.index
 3430615640.index
 3618257356.index

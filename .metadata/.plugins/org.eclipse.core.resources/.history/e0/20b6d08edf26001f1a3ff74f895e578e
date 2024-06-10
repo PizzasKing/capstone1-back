@@ -5,10 +5,18 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import com.manbo.homepage.dto.MemberDTO;
 import com.manbo.homepage.dto.TrailDTO;
 import com.manbo.homepage.entity.Member;
 import com.manbo.homepage.service.MemberService;
@@ -24,10 +32,10 @@ public class TrailController {
 
     // 산책로 등록
     @PostMapping
-    public ResponseEntity<TrailDTO> createTrail(@RequestBody TrailDTO trailDTO, @RequestParam("image") MultipartFile image)  throws IOException, Exception  {
+    public ResponseEntity<TrailDTO> createTrail(@RequestBody TrailDTO trailDTO)  throws IOException, Exception  {
         Member member = memberService.findByMidtoMember(trailDTO.getMember().getMid());
         trailDTO.setMember(member);
-        TrailDTO savedTrail = trailService.saveTrail(trailDTO, image);
+        TrailDTO savedTrail = trailService.saveTrail(trailDTO);
         return new ResponseEntity<>(savedTrail, HttpStatus.CREATED);
     }
 
@@ -47,8 +55,8 @@ public class TrailController {
 
     // 산책로 수정
     @PutMapping("/{id}")
-    public ResponseEntity<TrailDTO> updateTrail(@PathVariable Long id, @RequestBody TrailDTO trailDTO, @RequestParam("image") MultipartFile image) {
-        TrailDTO updatedTrail = trailService.updateTrail(id, trailDTO, image);
+    public ResponseEntity<TrailDTO> updateTrail(@PathVariable Long id, @RequestBody TrailDTO trailDTO) {
+        TrailDTO updatedTrail = trailService.updateTrail(id, trailDTO);
         return new ResponseEntity<>(updatedTrail, HttpStatus.OK);
     }
 

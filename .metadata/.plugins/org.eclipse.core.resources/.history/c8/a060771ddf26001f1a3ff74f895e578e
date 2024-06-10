@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Builder
 @Table(name = "route")
+@Table(name = "route")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Route extends BaseEntity {
@@ -20,6 +21,7 @@ public class Route extends BaseEntity {
     @Column(name = "time_idx")
     private Long timeIDX;
 
+	@Id
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "route_id")
@@ -32,6 +34,7 @@ public class Route extends BaseEntity {
     @Column(nullable = false) // 위도
     private double latitude;
 
+    @Column(nullable = false) // 경도
     @Column(nullable = false) // 경도
     private double longitude;
 
