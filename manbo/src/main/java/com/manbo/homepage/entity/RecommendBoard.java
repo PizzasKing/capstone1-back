@@ -1,10 +1,12 @@
 package com.manbo.homepage.entity;
 
+import jakarta.persistence.*;
 import lombok.*;
 
-import jakarta.persistence.*;
+import java.util.List;
 
-import java.sql.Timestamp;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.manbo.homepage.dto.RecommendBoardDTO;
 
 @Entity
 @Data
@@ -16,29 +18,53 @@ public class RecommendBoard extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long recommendId; // 산책로 추천 게시판 번호
+    private Long rbid; // 추천게시판 번호
 
+    @Column(nullable = false)
+    private String rbtitle; // 추천게시판 제목
+
+    @Column(length = 2000, nullable = false)
+    private String rbcontent; // 추천게시판 내용
+
+    @Column(nullable = true)
+    private Integer rbhit; // 조회수
+
+    @Column
+    private String recommendFilename;
+
+    @Column
+    private String recommendFilepath;
+
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "mid", nullable = false)
+    @JoinColumn(name="mid")
     private Member member;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "trail_id", nullable = false)
-    private Trail trailId;
+    @OneToMany(mappedBy = "recommendBoard", cascade = CascadeType.ALL)
+    @OrderBy("rrid desc")
+    @JsonIgnore
+    private List<RecommendReply> recommendReplyList;
 
-    @Column(nullable = false)
-    private String title; // 게시글 제목
+    public static RecommendBoard toSaveEntity(RecommendBoardDTO recommendBoardDTO) {
+        return RecommendBoard.builder()
+                .rbtitle(recommendBoardDTO.getRbtitle())
+                .rbcontent(recommendBoardDTO.getRbcontent())
+                .rbhit(0)
+                .recommendFilename(recommendBoardDTO.getRecommendFilename())
+                .recommendFilepath(recommendBoardDTO.getRecommendFilepath())
+                .member(recommendBoardDTO.getMember())
+                .build();
+    }
 
-    @Column(nullable = false, length = 2000)
-    private String content; // 게시글 내용
-
-    @Column(nullable = false)
-    private Timestamp createdDate; // 등록일
-
-    @Column(nullable = false)
-    private Integer viewCount; // 조회수
-
-    @Column(nullable = false)
-    private Integer likeCount; // 좋아요 수
-
+    public static RecommendBoard toUpdateEntity(RecommendBoardDTO recommendBoardDTO) {
+        return RecommendBoard.builder()
+                .rbid(recommendBoardDTO.getRbid())
+                .rbtitle(recommendBoardDTO.getRbtitle())
+                .rbcontent(recommendBoardDTO.getRbcontent())
+                .rbhit(recommendBoardDTO.getRbhit())
+                .recommendFilename(recommendBoardDTO.getRecommendFilename())
+                .recommendFilepath(recommendBoardDTO.getRecommendFilepath())
+                .member(recommendBoardDTO.getMember())
+                .build();
+    }
 }

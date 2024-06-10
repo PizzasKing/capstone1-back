@@ -54,8 +54,6 @@ public class Member extends BaseEntity{
                 .email(memberDTO.getEmail())
                 .name(memberDTO.getName())
                 .role(memberDTO.getRole())
-//                .rentalCount(memberDTO.getRentalCount())
-//                .rentalAble(memberDTO.getRentalAble())
                 .build();
         return member;
     }
@@ -67,8 +65,6 @@ public class Member extends BaseEntity{
                 .password(memberDTO.getPassword())
                 .email(memberDTO.getEmail())
                 .name(memberDTO.getName())
-//                .rentalCount(memberDTO.getRentalCount())
-//                .rentalAble(memberDTO.getRentalAble())
                 .role(memberDTO.getRole())
                 .build();
         return member;
@@ -80,8 +76,6 @@ public class Member extends BaseEntity{
                 .password(memberDTO.getPassword())
                 .email(memberDTO.getEmail())
                 .name(memberDTO.getName())
-//                .rentalCount(memberDTO.getRentalCount())
-//                .rentalAble(memberDTO.getRentalAble())
                 .role(memberDTO.getRole())
                 .build();
         return member;

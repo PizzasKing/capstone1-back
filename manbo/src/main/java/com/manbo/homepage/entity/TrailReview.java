@@ -1,6 +1,7 @@
 package com.manbo.homepage.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.manbo.homepage.dto.TrailReviewDTO;
 
 import jakarta.persistence.*;
@@ -13,11 +14,13 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @Builder
+@Table(name = "trail_review")
 @NoArgsConstructor
 @AllArgsConstructor
 public class TrailReview extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "review_id")
     private Long reviewId;
 
     @Column(name = "review_rank", nullable = false)
@@ -27,12 +30,12 @@ public class TrailReview extends BaseEntity {
     private String reviewContent;
     
     @JsonIgnore
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name="trail_id")
 	private Trail trail;
 
     @JsonIgnore
-	@ManyToOne(fetch = FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinColumn(name="member_id")
 	private Member member;
     

@@ -1,0 +1,48 @@
+package com.manbo.homepage.controller;
+
+import com.manbo.homepage.dto.RoomsDTO;
+import com.manbo.homepage.service.RoomsService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/rooms")
+public class RoomsController {
+
+    @Autowired
+    private RoomsService roomsService;
+
+    @PostMapping("/create")
+    public ResponseEntity<RoomsDTO> createRoom(@RequestBody RoomsDTO roomsDTO) {
+        RoomsDTO createdRoom = roomsService.createRoom(roomsDTO);
+        return ResponseEntity.ok(createdRoom);
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<RoomsDTO> updateRoom(@PathVariable Long id, @RequestBody RoomsDTO roomsDTO) {
+        roomsDTO.setRoomId(id);
+        RoomsDTO updatedRoom = roomsService.updateRoom(roomsDTO);
+        return ResponseEntity.ok(updatedRoom);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<RoomsDTO> getRoomById(@PathVariable Long id) {
+        RoomsDTO room = roomsService.getRoomById(id);
+        return ResponseEntity.ok(room);
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<RoomsDTO>> getAllRooms() {
+        List<RoomsDTO> roomsList = roomsService.getAllRooms();
+        return ResponseEntity.ok(roomsList);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteRoom(@PathVariable Long id) {
+        roomsService.deleteRoom(id);
+        return ResponseEntity.noContent().build();
+    }
+}

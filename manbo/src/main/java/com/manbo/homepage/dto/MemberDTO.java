@@ -45,12 +45,22 @@ public class MemberDTO {
                 .password(member.getPassword())
                 .email(member.getEmail())
                 .name(member.getName())
-//                .rentalCount(member.getRentalCount())
-//                .rentalAble(member.getRentalAble())
                 .role(member.getRole())
                 .createdDate(member.getCreatedDate())
                 .updatedDate(member.getUpdatedDate())
                 .build();
         return memberDTO;
+    }
+
+    // MemberDTO -> Member
+    public static Member toEntity(MemberDTO memberDTO) {
+        return Member.builder()
+                .memberId(memberDTO.getMemberId())
+                .mid(memberDTO.getMid())
+                .password(memberDTO.getPassword())
+                .email(memberDTO.getEmail())
+                .name(memberDTO.getName())
+                .role(memberDTO.getRole())
+                .build();
     }
 }

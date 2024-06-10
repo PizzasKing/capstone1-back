@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import java.sql.Timestamp;
 
 import com.manbo.homepage.entity.Member;
+import com.manbo.homepage.entity.Route;
 import com.manbo.homepage.entity.Trail;
 
 @Data
@@ -18,13 +19,20 @@ public class TrailDTO {
 
     private Long trailId; // 산책로 ID
     private Member member;
+    private Route routeID;
     private String startLocation; // 시작 위치
     private String trailName; // 산책로 이름
     private int usageCount; // 산책로 이용 횟수
     private double rating; // 산책로 평점
+    private double distance; // 거리
+    private boolean regstate; // 등록 상태
+    private Integer refId; // 참조 ID
     private Timestamp createdDate;
+    private Timestamp updatedDate;
+    private Timestamp endDate;
     private String trailRoutePath; // 산책로 경로 파일 경로
-    
+    private String imagePath; // 이미지 경로 추가
+
     public static TrailDTO toSaveDTO(Trail trail) {
         TrailDTO trailDTO = TrailDTO.builder()
                 .trailId(trail.getTrailId())
@@ -33,10 +41,34 @@ public class TrailDTO {
                 .trailName(trail.getTrailName())
                 .usageCount(trail.getUsageCount())
                 .rating(trail.getRating())
+                .distance(trail.getDistance())
+                .regstate(trail.isRegstate())
+                .refId(trail.getRefId())
                 .createdDate(trail.getCreatedDate())
+                .updatedDate(trail.getUpdatedDate())
+                .endDate(trail.getEndDate())
+                .routeID(trail.getRouteId())
                 .trailRoutePath(trail.getTrailRoutePath())
+                .imagePath(trail.getImagePath()) // 이미지 경로 추가
                 .build();
-        
+        return trailDTO;
+    }
+
+    public static TrailDTO toEntity(Trail trail) {
+        TrailDTO trailDTO = TrailDTO.builder()
+                .trailId(trail.getTrailId())
+                .member(trail.getMember())
+                .startLocation(trail.getStartLocation())
+                .trailName(trail.getTrailName())
+                .usageCount(trail.getUsageCount())
+                .distance(trail.getDistance())
+                .regstate(trail.isRegstate())
+                .refId(trail.getRefId())
+                .rating(trail.getRating())
+                .routeID(trail.getRouteId())
+                .trailRoutePath(trail.getTrailRoutePath())
+                .imagePath(trail.getImagePath()) // 이미지 경로 추가
+                .build();
         return trailDTO;
     }
 }

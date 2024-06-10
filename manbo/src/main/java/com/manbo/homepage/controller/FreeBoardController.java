@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.manbo.homepage.config.SecurityUser;
 import com.manbo.homepage.dto.FreeBoardDTO;
+import com.manbo.homepage.dto.MemberDTO;
 import com.manbo.homepage.entity.FreeBoard;
 import com.manbo.homepage.service.FreeBoardService;
 import com.manbo.homepage.service.MemberService;
@@ -23,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/freeboard")
 public class FreeBoardController {
 	private final FreeBoardService freeBoardService;
+    private final MemberService memberService;
 	@GetMapping("/list")
 	public Page<FreeBoardDTO> pagelist(
 			@RequestParam(value = "page", defaultValue = "0") int page,
@@ -55,13 +57,12 @@ public class FreeBoardController {
 		return freeBoardService.findById(fbid);
 	}
 
-	@PostMapping("/write")
-	public void write(@RequestBody FreeBoardDTO freeBoardDTO, @AuthenticationPrincipal SecurityUser principal,
-			@RequestParam("freeBoardFile") MultipartFile freeBoardFile) throws IOException, Exception {
-		FreeBoard freeBoard = FreeBoard.toSaveEntity(freeBoardDTO);
-		freeBoard.setMember(principal.getMember()); // 설정된 인증된 사용자로 member 설정
-		freeBoardService.save(freeBoard, freeBoardFile);
-	}
+    @PostMapping("/write")
+    public void write(@RequestBody FreeBoardDTO freeBoardDTO,
+                      @RequestParam(value = "freeBoardFile", required = false) MultipartFile freeBoardFile) throws IOException, Exception {
+        MemberDTO memberDTO = memberService.findByMidDirect(freeBoardDTO.getMember().getMid());
+        freeBoardService.save(freeBoardDTO, memberDTO, freeBoardFile);
+    }
 
 	@PutMapping("/update/{fbid}")
 	public FreeBoardDTO update(@PathVariable Long fbid, @RequestBody FreeBoardDTO freeBoardDTO,

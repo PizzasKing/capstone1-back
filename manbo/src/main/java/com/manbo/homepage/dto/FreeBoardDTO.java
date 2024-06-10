@@ -48,6 +48,18 @@ public class FreeBoardDTO {
 				.build();
 		
 		return freeBoardDTO;
-	}
+	}    
+	// dto -> entity
+    public static FreeBoard toEntity(FreeBoardDTO freeBoardDTO) {
+        return FreeBoard.builder()
+                .fbid(freeBoardDTO.getFbid())
+                .member(freeBoardDTO.getMember())
+                .fbtitle(freeBoardDTO.getFbtitle())
+                .fbcontent(freeBoardDTO.getFbcontent())
+                .fbhit(freeBoardDTO.getFbhit())
+                .freeFilename(freeBoardDTO.getFreeFilename())
+                .freeFilepath(freeBoardDTO.getFreeFilepath())
+                .build();
+    }
 	
 }

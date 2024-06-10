@@ -82,9 +82,6 @@ public class MemberService {
         }
     }
 
-    public MemberDTO findByUsername(String username) {
-        return null;
-    }
 
     //아이디 중복검사
     public String checkId(String mid) {
@@ -122,4 +119,10 @@ public class MemberService {
 		Page<Member> memberPage = memberRepository.findAll(pageable);
 		return memberPage.map(member -> MemberDTO.toSaveDTO(member));
 	}
+	
+    public MemberDTO findByMidDirect(String username) {
+        Optional<Member> member = memberRepository.findByMid(username);
+        return member.map(MemberDTO::toSaveDTO)
+                     .orElseThrow(() -> new IllegalArgumentException("Member not found with mid: " + username));
+    }
 }
