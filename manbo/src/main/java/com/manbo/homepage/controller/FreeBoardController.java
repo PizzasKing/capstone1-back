@@ -54,7 +54,9 @@ public class FreeBoardController {
 
 	@GetMapping("/{fbid}")
 	public FreeBoardDTO getDetail(@PathVariable Long fbid) {
-		return freeBoardService.findById(fbid);
+		FreeBoardDTO fb = freeBoardService.findById(fbid);
+		fb.setFbhit(fb.getFbhit()+1);
+		return fb;
 	}
 
     @PostMapping("/write")

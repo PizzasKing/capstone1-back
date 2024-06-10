@@ -26,6 +26,7 @@ public class TrailDTO {
     private double rating; // 산책로 평점
     private double distance; //거리
     private boolean regstate; // 등록상태
+    private boolean isReviewed; // 리뷰 여부
     private Integer refId; //참조id
     private Timestamp createdDate;
     private Timestamp updatedDate;
@@ -44,6 +45,7 @@ public class TrailDTO {
                 .distance(trail.getDistance())
                 .regstate(trail.isRegstate())
                 .refId(trail.getRefId())
+                .isReviewed(trail.isReviewed())
                 .createdDate(trail.getCreatedDate())
                 .updatedDate(trail.getUpdatedDate())
                 .endDate(trail.getEndDate())
@@ -59,6 +61,7 @@ public class TrailDTO {
     			.startLocation(trail.getStartLocation())
     			.trailName(trail.getTrailName())
     			.usageCount(trail.getUsageCount())
+                .isReviewed(trail.isReviewed())
     			.distance(trail.getDistance())
                 .regstate(trail.isRegstate())
                 .refId(trail.getRefId())

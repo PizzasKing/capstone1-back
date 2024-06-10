@@ -42,6 +42,9 @@ public class Trail extends BaseEntity {
 	private boolean regstate; // 등록 상태
 	
 	@Column(nullable = true)
+	private boolean isReviewed; // 리뷰 여부
+	
+	@Column(nullable = true)
     private Timestamp endDate; // 산책 끝난 시간
 	
 	@Column(nullable = true)
@@ -69,6 +72,7 @@ public class Trail extends BaseEntity {
 				.distance(trailDTO.getDistance())
 				.regstate(trailDTO.isRegstate())
 				.refId(trailDTO.getRefId())
+				.isReviewed(trailDTO.isReviewed())
 				.endDate(trailDTO.getEndDate())
 				.member(trailDTO.getMember())
 				.routeId(trailDTO.getRouteID())
@@ -85,6 +89,7 @@ public class Trail extends BaseEntity {
 				.usageCount(trailDTO.getUsageCount())
 				.rating(trailDTO.getRating())
 				.distance(trailDTO.getDistance())
+				.isReviewed(trailDTO.isReviewed())
 				.regstate(trailDTO.isRegstate())
 				.refId(trailDTO.getRefId())
 				.endDate(trailDTO.getEndDate())
